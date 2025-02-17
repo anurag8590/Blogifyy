@@ -3,8 +3,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
-from app.models.model import Blog  # Ensure correct import
+from app.models.model import Blog
 from sqlalchemy.orm import aliased
+from sqlalchemy.orm import selectinload
 
 from app.models.model import Blog
  
@@ -12,9 +13,16 @@ class BlogDAO:
     
     def __init__(self, db: Session):
         self.db = db
+    
+    async def get_all_blogs(self) -> List[Blog]:
+
+        """Fetch all blogs from the database."""
+
+        result = await self.db.execute(select(Blog))
+        return result.scalars().all()
  
-    async def create_blog(self, title: str, content: str, category_id : int, user_id: int):
-        new_blog = Blog(title = title, content = content, category_id = category_id, user_id = user_id)
+    async def create_blog(self, title: str, content: str, is_published : bool, category_id : int, user_id: int):
+        new_blog = Blog(title = title, content = content, is_published = is_published, category_id = category_id, user_id = user_id)
         self.db.add(new_blog)
         await self.db.commit()
         await self.db.refresh(new_blog)
@@ -29,15 +37,16 @@ class BlogDAO:
         result = await self.db.execute( select(Blog).filter(Blog.user_id == user_id))
         return result.scalars().all()
  
-    async def update_blog(self, blog_id: int, title: str, content: str):
+    async def update_blog(self, blog_id: int, title: str, is_published : bool, content: str, category_id : int):
 
         #check if the blog exists or not (incompleted)
 
-
         blog = await self.get_blogs_by_id(blog_id)
         if blog:
-            blog.title = title
-            blog.content = content
+            blog.title = title if title else blog.title 
+            blog.content = content if content else blog.content
+            blog.is_published = is_published if is_published else blog.is_published
+            blog.category_id = category_id if category_id else blog.category_id
             await self.db.commit()
             await self.db.refresh(blog)
         return blog
@@ -51,11 +60,19 @@ class BlogDAO:
             await self.db.delete(blog)
             await self.db.commit()
         return blog
-    
-    async def update_blog_category_id(self,blog_id:int):
 
-        pass
+    async def toggle_publish_status(self, blog_id: int):
 
+        """Toggle the blog's published status."""
+
+        query = select(Blog).filter(Blog.blog_id == blog_id)
+        result = await self.db.execute(query)
+        blog = result.scalars().first()
+
+        blog.is_published = not blog.is_published  
+        await self.db.commit()
+        await self.db.refresh(blog)
+        return blog
 
 class BlogSearchDAO:  # add this functionlity inside the same original BlogDAO class (incomplete)
     def __init__(self, db: AsyncSession):

@@ -33,7 +33,7 @@ function LoginPage() {
               </button>
             </div>
           </div>
-          <Button className="w-full">Login</Button>
+          <Button className="w-full" onClick={() => navigate("/homepage")}>Login</Button>
           <p className="mt-4 text-sm text-center">
             Don't have an account?{" "}
             <button onClick={() => navigate("/register")} className="text-blue-600 underline">

@@ -3,15 +3,15 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
-from app.database import database
+from app.database.database import get_db
 from app.dao.dao_user import UserDAO
 from app.schemas.schema_user import UserCreateDTO, RefreshTokenDTO
 
-router = APIRouter()
+router = APIRouter(tags=["auth"])
 
 
 @router.post("/register/")
-async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(database.get_db)):
+async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_db)):
     """Registers a new user"""
     try:
         dao_user = UserDAO(db)
@@ -34,7 +34,7 @@ async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(datab
         ) from e
 
 @router.post("/token/")
-async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(database.get_db)):
+async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     """Generates a JWT token for authentication"""
     try:
         dao_user = UserDAO(db)
@@ -48,7 +48,7 @@ async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
         access_token = dao_user.create_access_token({"sub": user_retrieved.username})
         refresh_token = dao_user.create_refresh_token({"user": user_retrieved.username})
 
-        print("refresh_token",refresh_token)
+        # print("refresh_token",refresh_token)
 
         return {"access_token": access_token, 
                 "refresh_token":refresh_token,
@@ -65,7 +65,7 @@ async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
 
 
 @router.post("/refresh/")
-async def refresh_token(refresh_data: RefreshTokenDTO, db: Session = Depends(database.get_db)):
+async def refresh_token(refresh_data: RefreshTokenDTO, db: Session = Depends(get_db)):
     """Generate a new access token using a refresh token"""
     dao_user = UserDAO(db)
 

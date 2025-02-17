@@ -11,11 +11,9 @@ class CategoryUpdateDTO(BaseModel):
     description: Optional[str] = None
 
 class CategoryResponseDTO(BaseModel):
-    id: int
+    category_id: int
     name: str
-    slug: str
-    description: Optional[str]
-    created_at: datetime
+    description: Optional[str] = None
 
     model_config = ConfigDict(
         from_attributes=True,

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
-from database import get_db
-from .dao import BlogSearchDAO
+from app.database.database import get_db
+from app.dao.dao_blog import BlogSearchDAO
 
 router = APIRouter(prefix="/search", tags=["search"])
 

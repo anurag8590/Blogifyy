@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database.database import create_table
-from app.routes import blog,user
-
+from app.routes import blog,user,comments,category,search
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
@@ -25,6 +25,17 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-app.include_router(blog.router,tags=["blogs"])
-app.include_router(user.router,tags=["User"])
+
+app.include_router(blog.router)
+app.include_router(user.router)
+app.include_router(comments.router)
+app.include_router(search.router)
+app.include_router(category.router)
