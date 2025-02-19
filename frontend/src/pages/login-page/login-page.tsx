@@ -1,14 +1,50 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
+import { login } from "@/services/auth";
+import { triggerAuthChange } from "@/hooks/use-auth";
+import { Flip,toast } from "react-toastify";
 
 function LoginPage() {
+
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+
+      await login({
+        username: formData.get("username") as string,
+        password: formData.get("password") as string,
+      });
+
+      toast.success("Login successful!!", {
+        autoClose: 2000,
+        position: "bottom-right",
+        transition: Flip,
+      });
+
+      triggerAuthChange();
+      navigate({ to: "/homepage" });
+    } 
+    catch (err) {
+      setError("Invalid username or password");
+    } 
+    finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -17,27 +53,33 @@ function LoginPage() {
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <Label>Email</Label>
-            <Input type="email" placeholder="Enter your email" />
-          </div>
-          <div className="mb-4">
-            <Label>Password</Label>
-            <div className="relative">
-              <Input type={showPassword ? "text" : "password"} placeholder="Enter password" />
-              <button
-                type="button"
-                className="absolute right-3 top-2.5 text-gray-500"
-                onClick={() => setShowPassword(!showPassword)}    >
-                {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
-              </button>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+
+            <div>
+              <Label>Username</Label>
+              <Input name="username" type = "text" required placeholder="Enter username" />
             </div>
-          </div>
-          <Button className="w-full" onClick={() => navigate("/homepage")}>Login</Button>
+
+            <div>
+              <Label>Password</Label>
+              <div className="relative">
+                <Input name="password" type = "password" required placeholder="Enter password" />
+              </div>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Signing in..." : "Login"}
+            </Button>
+          </form>
           <p className="mt-4 text-sm text-center">
-            Don't have an account?{" "}
-            <button onClick={() => navigate("/register")} className="text-blue-600 underline">
+            Don't have an account? {" "}
+            <button 
+              onClick={() => navigate({ to: "/register" })} 
+              className="text-blue-600 underline" >
+
               Register
+              
             </button>
           </p>
         </CardContent>

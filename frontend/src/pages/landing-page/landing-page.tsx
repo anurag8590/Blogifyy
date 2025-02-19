@@ -1,11 +1,13 @@
-import React from 'react';
+// src/pages/landing-page/landing-page.tsx
 import './landing-page.css'
+import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
 
-const LandingPage: React.FC = () => {
-  const handleGetStarted = () => {
-    window.location.href = '/login'; // Redirect to login page
-  };
-
+function LandingPage() {
+  const navigate = useNavigate();
+  const authenticated = useAuth();
+  
   return (
     <div className="landing-page">
       <header className="header">
@@ -17,15 +19,15 @@ const LandingPage: React.FC = () => {
           stories, and ideas with the world. Join our community of writers and
           start your blogging journey today!
         </p>
-        <button onClick={handleGetStarted} className="get-started-button">
+        <Button onClick={() => navigate({ to: authenticated ? "/homepage" : "/register" })} >
           Get Started
-        </button>
+        </Button>
       </main>
       <footer className="footer">
         <p>&copy; 2023 Blogifyy. All rights reserved.</p>
       </footer>
     </div>
   );
-};
+}
 
 export default LandingPage;

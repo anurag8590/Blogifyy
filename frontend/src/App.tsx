@@ -1,26 +1,28 @@
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import LoginPage from "./pages/login-page/login-page";
-import RegisterPage from "./pages/register-page/register-page";
-import LandingPage from "./pages/landing-page/landing-page";
-import BlogPage from "./pages/blog-create-page/blog-page";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import HomePage from "./pages/homepage/homepage";
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { routeTree } from './routeTree.gen'
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
+// Create the router instance
+const router = createRouter({ 
+  routeTree,
+  defaultPreload: 'intent'
+})
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
 
 function App() {
   return (
-    <Router>
+    <div>
+      <RouterProvider router={router} />
       <ToastContainer />
-      <Routes>
-        <Route path="" element={<LandingPage />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/homepage" element={<HomePage/>} />
-        <Route path="/blog" element={<BlogPage/>} />
-      </Routes>
-    </Router>
-  );
+    </div>
+  )
 }
 
-export default App;
+export default App

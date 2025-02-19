@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
+from typing import List, Union
 from app.models.model import User
 from app.dao.dao_blog import BlogDAO
-from app.schemas.schema_blog import BlogResponseDTO, BlogCreateDTO, BlogUpdateDTO, BlogDetailResponseDTO
+from app.schemas.schema_blog import BlogResponseDTO, BlogCreateDTO, BlogUpdateDTO
 from app.dao import dao_user
 from app.database.database import get_db
 
@@ -26,7 +26,7 @@ async def create_blog(blog: BlogCreateDTO, current_user: User = Depends(dao_user
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail= f"Error creating blog {e}") from e
 
 @router.get("/", response_model=List[BlogResponseDTO])
-async def get_blogs(db: AsyncSession = Depends(get_db)):
+async def get_blogs(db: AsyncSession = Depends(get_db),current_user: User = Depends(dao_user.get_current_user)):
     """Fetches all blogs"""
     try:
         dao_blog = BlogDAO(db)
@@ -35,17 +35,17 @@ async def get_blogs(db: AsyncSession = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving blogs") from e
 
-@router.get("/{blog_id}", response_model=BlogResponseDTO)
-async def get_blog_by_id(blog_id: int, db: AsyncSession = Depends(get_db)):
-    """Fetches a Blog by its ID"""
-    try:
-        dao_blog = BlogDAO(db)
-        blog = await dao_blog.get_blogs_by_id(blog_id)
-        if blog is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
-        return blog
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving blog") from e
+# @router.get("/{blog_id}", response_model=BlogResponseDTO)
+# async def get_blog_by_id(blog_id: int, db: AsyncSession = Depends(get_db),current_user: User = Depends(dao_user.get_current_user)):
+#     """Fetches a Blog by its ID"""
+#     try:
+#         dao_blog = BlogDAO(db)
+#         blog = await dao_blog.get_blogs_by_id(blog_id)
+#         if blog is None:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
+#         return blog
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving blog") from e
 
 @router.put("/{blog_id}", response_model=BlogResponseDTO)
 async def update_blog(blog_id: int, blog: BlogUpdateDTO, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
@@ -103,3 +103,47 @@ async def toggle_publish_status(
         return updated_blog
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating publish status") from e
+
+# @router.get("/{user_id}", response_model=BlogResponseDTO)
+# async def get_blog_by_user_id(user_id : int, db: AsyncSession = Depends(get_db),current_user: User = Depends(dao_user.get_current_user)):
+#     """Fetches a Blog by its user ID"""
+#     try:
+#         dao_blog = BlogDAO(db)
+#         blog = await dao_blog.get_blogs_by_user(user_id)
+#         if blog is None:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
+#         return blog
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving blog") from e
+
+
+@router.get("/{id}/", response_model = Union[BlogResponseDTO, List[BlogResponseDTO]])
+async def get_blog(
+    id: int, 
+    db: AsyncSession = Depends(get_db),get_type: str = Query(..., regex="^(USER|BLOG|CATG)$"),
+    current_user: User = Depends(dao_user.get_current_user)
+):
+    """Fetches a blog by its ID or all blogs by the user ID"""
+    try:
+        dao_blog = BlogDAO(db)
+        print(get_type)
+        if get_type == "USER":
+            blogs = await dao_blog.get_blogs_by_user(id)
+            if not blogs:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No blogs found for this user")
+            return blogs
+        
+        elif get_type == "BLOG":
+            blog = await dao_blog.get_blogs_by_id(id)
+            if blog is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
+            return blog
+        
+        elif get_type == "CATG":
+            blog = await dao_blog.get_blogs_by_category_id(id)
+            if blog is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
+            return blog
+
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving blog") from e

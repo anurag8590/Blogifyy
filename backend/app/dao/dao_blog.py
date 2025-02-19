@@ -18,7 +18,7 @@ class BlogDAO:
 
         """Fetch all blogs from the database."""
 
-        result = await self.db.execute(select(Blog))
+        result = await self.db.execute(select(Blog).filter(Blog.is_published == True))
         return result.scalars().all()
  
     async def create_blog(self, title: str, content: str, is_published : bool, category_id : int, user_id: int):
@@ -34,6 +34,7 @@ class BlogDAO:
         return result.scalars().first()
  
     async def get_blogs_by_user(self, user_id: int):
+
         result = await self.db.execute( select(Blog).filter(Blog.user_id == user_id))
         return result.scalars().all()
  
@@ -73,6 +74,14 @@ class BlogDAO:
         await self.db.commit()
         await self.db.refresh(blog)
         return blog
+    async def get_blogs_by_category_id(self, cat_id : int):
+
+        """ Get Blogs by Category Id"""
+
+        
+        result = await self.db.execute( select(Blog).filter(Blog.category_id == cat_id))
+        return result.scalars().all()
+    
 
 class BlogSearchDAO:  # add this functionlity inside the same original BlogDAO class (incomplete)
     def __init__(self, db: AsyncSession):
