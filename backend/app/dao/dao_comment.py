@@ -10,7 +10,9 @@ class CommentDAO:
         self.db = db
 
     async def create_comment(self, content: str, blog_id: int, user_id: int) -> Comment:
+
         """Creates a new comment"""
+
         new_comment = Comment(
             content=content,
             blog_id=blog_id,
@@ -22,9 +24,11 @@ class CommentDAO:
         return new_comment
 
     async def get_comment_by_id(self, comment_id: int) -> Optional[Comment]:
+        
         """Fetches a comment by ID"""
+
         result = await (self.db.execute(select(Comment).filter(Comment.comment_id == comment_id)))
-        return result.scalars().all()
+        return result.scalars().first()
 
     # async def get_comments_by_blog_id(self, blog_id: int) -> List[Comment]:
     #     """Fetches all comments for a blog"""
@@ -41,7 +45,9 @@ class CommentDAO:
     #     return result.scalars().all()
 
     async def update_comment(self, comment_id: int, content: str) -> Optional[Comment]:
+
         """Updates a comment's content"""
+
         query = select(Comment).filter(Comment.comment_id == comment_id)
         result = await self.db.execute(query)
         comment = result.scalar_one_or_none()
@@ -54,7 +60,9 @@ class CommentDAO:
         return None
 
     async def delete_comment(self, comment_id: int) -> None:
+
         """Deletes a comment by ID"""
+
         query = select(Comment).filter(Comment.comment_id == comment_id)
         result = await self.db.execute(query)
         comment = result.scalar_one_or_none()
@@ -64,3 +72,10 @@ class CommentDAO:
 
         await self.db.delete(comment)
         await self.db.commit()
+    
+    async def get_comments_by_blog_id(self, blog_id: int):
+
+        """Retrieve all comments for a given blog"""
+
+        result = await self.db.execute(select(Comment).where(Comment.blog_id == blog_id))
+        return result.scalars().all()

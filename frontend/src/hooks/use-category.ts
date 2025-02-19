@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCategories,
-  getCategoryById,
   createCategory,
   updateCategory,
 } from "@/api/category";

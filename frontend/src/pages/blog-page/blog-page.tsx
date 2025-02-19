@@ -1,5 +1,5 @@
-import { useNavigate } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+// import { useNavigate } from "@tanstack/react-router";
+// import { Button } from "@/components/ui/button";
 import { useBlogs } from "@/hooks/use-blog";
 import { Link } from "@tanstack/react-router";
 // import { useAuth } from "@/hooks/use-auth";
@@ -8,16 +8,6 @@ import { Link } from "@tanstack/react-router";
 export default function BlogPage() {
 
   const { userBlogs, isLoading, isError } = useBlogs();
-
-  // const authenticated = useAuth();
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!authenticated) {
-  //     navigate({ to: "/login" });
-  //   }
-  // }, [authenticated, navigate]);
-  
 
   return (
     <div className="flex flex-col items-center bg-gray-100 min-h-screen">

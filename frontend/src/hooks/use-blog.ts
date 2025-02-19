@@ -5,7 +5,9 @@ import {
   updateBlog,
   deleteBlog,
   togglePublishBlog,
-  getBlogsByUserId }
+  getBlogsByUserId, 
+  getBlogsByCategoryId, 
+  searchBlogs}
   from "@/api/blog";
 
 import { Blog } from "@/interface/Blog";
@@ -25,6 +27,12 @@ export const useBlogs = () => {
     queryFn: () => getBlogsByUserId(Number(localStorage.getItem("user_id"))),
     enabled: user 
   });
+
+  // const { data: categoryBlogs, isLoading: isCategoryBlogsLoading, isError: isCategoryBlogsError, error: categoryBlogsError } = useQuery({
+  //   queryKey: ["categoryBlogs", catId],  // Include catId to refetch when it changes
+  //   queryFn: () => getBlogsByCategoryId(catId!),  // Ensure it's called properly
+  //   enabled: !!catId,  // Prevent running if catId is undefined
+  // });
 
   const createMutation = useMutation({
     mutationFn: (newBlog: Partial<Blog>) => createBlog(newBlog),
@@ -58,6 +66,10 @@ export const useBlogs = () => {
   return {
     blogs,
     userBlogs,
+    // categoryBlogs,
+    // isCategoryBlogsLoading,
+    // isCategoryBlogsError,
+    // categoryBlogsError,
     isLoading,
     isUserBlogsLoading,
     isUserBlogsError,
@@ -70,4 +82,21 @@ export const useBlogs = () => {
     deleteMutation,
     togglePublishMutation,
   };
+};
+
+export const useCategoryBlogs = (catId?: number) => {
+  return useQuery({
+    queryKey: ["categoryBlogs", catId],
+    queryFn: () => getBlogsByCategoryId(catId!),
+    enabled: !!catId,
+  });
+};
+
+
+export const useSearchBlogs = (query?: string) => {
+  return useQuery({
+    queryKey: ["searchBlogs", query],
+    queryFn: () => searchBlogs(query!),
+    enabled: !!query,
+  });
 };

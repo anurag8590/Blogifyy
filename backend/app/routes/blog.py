@@ -84,25 +84,25 @@ async def delete_blog(blog_id: int, current_user: User = Depends(dao_user.get_cu
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error deleting blog") from e
 
-@router.put("/{blog_id}/toggle-publish", response_model=BlogResponseDTO)
-async def toggle_publish_status(
-    blog_id: int,
-    current_user: User = Depends(dao_user.get_current_user),
-    db: AsyncSession = Depends(get_db),
-):
-    """Toggles the publish status of a blog"""
-    try:
-        dao_blog = BlogDAO(db)
-        blog = await dao_blog.get_blogs_by_id(blog_id)
-        if blog is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
-        if blog.user_id != current_user.id:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to update this blog")
+# @router.put("/{blog_id}/toggle-publish", response_model=BlogResponseDTO)
+# async def toggle_publish_status(
+#     blog_id: int,
+#     current_user: User = Depends(dao_user.get_current_user),
+#     db: AsyncSession = Depends(get_db),
+# ):
+#     """Toggles the publish status of a blog"""
+#     try:
+#         dao_blog = BlogDAO(db)
+#         blog = await dao_blog.get_blogs_by_id(blog_id)
+#         if blog is None:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
+#         if blog.user_id != current_user.id:
+#             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to update this blog")
 
-        updated_blog = await dao_blog.toggle_publish_status(blog_id)
-        return updated_blog
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating publish status") from e
+#         updated_blog = await dao_blog.toggle_publish_status(blog_id)
+#         return updated_blog
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating publish status") from e
 
 # @router.get("/{user_id}", response_model=BlogResponseDTO)
 # async def get_blog_by_user_id(user_id : int, db: AsyncSession = Depends(get_db),current_user: User = Depends(dao_user.get_current_user)):
@@ -126,7 +126,6 @@ async def get_blog(
     """Fetches a blog by its ID or all blogs by the user ID"""
     try:
         dao_blog = BlogDAO(db)
-        print(get_type)
         if get_type == "USER":
             blogs = await dao_blog.get_blogs_by_user(id)
             if not blogs:

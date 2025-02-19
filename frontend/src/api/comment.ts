@@ -1,8 +1,9 @@
 import api from "@/services/auth";
+import { BlogComment } from "@/interface/Comments";
 
 
 export const createComment = async (commentData: { content: string; blog_id: number }) => {
-    const response = await api.post("/comments", commentData);
+    const response = await api.post("/comments/", commentData);
     return response.data;
   };
   
@@ -18,4 +19,9 @@ return response.data;
 
 export const deleteComment = async (commentId: number) => {
 await api.delete(`/comments/${commentId}`);
+};
+
+export const fetchComments = async (blogId: number): Promise<BlogComment[]> => {
+  const response = await api.get(`/comments/blogs/${blogId}/comments`);
+  return response.data;
 };

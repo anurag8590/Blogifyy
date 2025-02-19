@@ -1,11 +1,11 @@
 import { useLoaderData } from "@tanstack/react-router";
-import BlogPage from "./blog-create-page";
+import BlogCreatePage from "./blog-create-page";
 
 export default function BlogEditPage() {
   const blog = useLoaderData({from: "/myblogs/$blogid"});
 
   return (
-    <BlogPage
+    <BlogCreatePage
       view={false}
       blogId={blog.blog_id}
       initialTitle={blog.title}

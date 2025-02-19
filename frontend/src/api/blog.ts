@@ -27,7 +27,7 @@ export const createBlog = async (blogData: Partial<Blog>) => {
   
   // Delete a blog
   export const deleteBlog = async (blogId: number) => {
-    await api.delete(`/${blogId}`);
+    await api.delete(`/blogs/${blogId}`);
   };
   
   // Toggle publish status of a blog
@@ -52,3 +52,9 @@ export const createBlog = async (blogData: Partial<Blog>) => {
     const response = await api.get(`/blogs/${catId}/?get_type=CATG`);
     return response.data;
   };
+
+  export const searchBlogs = async (query: string) => {
+    if (!query) throw new Error("Search query is required");
+    const response = await api.get(`/search/blogs?q=${encodeURIComponent(query)}`);
+    return response.data;
+  };  
