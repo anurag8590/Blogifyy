@@ -40,7 +40,7 @@ export default function BlogCreatePage({
   const navigate = useNavigate();
   const isEditing = blogId !== undefined;
 
-  const { createMutation, updateMutation, deleteMutation } = useBlogs(); // Use deleteMutation from useBlogs
+  const { createMutation, updateMutation, deleteMutation } = useBlogs(); 
   const { categories } = useCategories();
 
   const [title, setTitle] = useState(initialTitle);
@@ -59,7 +59,7 @@ export default function BlogCreatePage({
 
   useEffect(() => {
     if (!isEditing) {
-      setIsPublished(initialIsPublished); // ✅ Reset only when creating a new blog
+      setIsPublished(initialIsPublished); 
     }
   }, [blogId]);
 

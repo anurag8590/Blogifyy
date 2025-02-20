@@ -36,6 +36,7 @@ class BlogDAO:
     async def get_blogs_by_user(self, user_id: int):
 
         result = await self.db.execute( select(Blog).filter(Blog.user_id == user_id))
+        # print(f"reusultant blogs for user : {type(result.scalars().all())}")
         return result.scalars().all()
  
     async def update_blog(self, blog_id: int, title: str, is_published : bool, content: str, category_id : int):

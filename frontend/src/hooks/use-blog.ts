@@ -4,7 +4,7 @@ import {
   createBlog,
   updateBlog,
   deleteBlog,
-  togglePublishBlog,
+  // togglePublishBlog,
   getBlogsByUserId, 
   getBlogsByCategoryId, 
   searchBlogs}
@@ -25,7 +25,8 @@ export const useBlogs = () => {
   const { data: userBlogs, isLoading: isUserBlogsLoading, isError: isUserBlogsError, error: userBlogsError} = useQuery({
     queryKey: ["userBlogs", localStorage.getItem("user_id")],
     queryFn: () => getBlogsByUserId(Number(localStorage.getItem("user_id"))),
-    enabled: user 
+    enabled: user,
+    retry: false
   });
 
   // const { data: categoryBlogs, isLoading: isCategoryBlogsLoading, isError: isCategoryBlogsError, error: categoryBlogsError } = useQuery({
@@ -56,12 +57,12 @@ export const useBlogs = () => {
     },
   });
 
-  const togglePublishMutation = useMutation({
-    mutationFn: (blogId: number) => togglePublishBlog(blogId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
-    },
-  });
+  // const togglePublishMutation = useMutation({
+  //   mutationFn: (blogId: number) => togglePublishBlog(blogId),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["blogs"] });
+  //   },
+  // });
 
   return {
     blogs,
@@ -80,7 +81,7 @@ export const useBlogs = () => {
     createMutation,
     updateMutation,
     deleteMutation,
-    togglePublishMutation,
+    // togglePublishMutation,
   };
 };
 

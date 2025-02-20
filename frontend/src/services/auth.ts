@@ -24,10 +24,6 @@ import axios, {
     email: string;
   }
   
-//   interface RefreshTokenPayload {
-//     refresh_token: string;
-//   }
-  
   const API_BASE_URL = "http://127.0.0.1:8000";
   
   const api = axios.create({
@@ -42,6 +38,7 @@ import axios, {
   const getStoredRefreshToken = () => localStorage.getItem("refresh_token");
   
   const storeAuthData = (authResponse: AuthResponse) => {
+    console.log("Storing auth data:", authResponse);
     localStorage.setItem("user_id", String(authResponse.user_id));
     localStorage.setItem("token", authResponse.access_token);
     localStorage.setItem("username", authResponse.username);
@@ -50,11 +47,12 @@ import axios, {
   };
   
   const clearAuthData = () => {
-    localStorage.removeItem("token");
+    console.log("Clearing auth data");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_id");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
+    localStorage.removeItem("token");
   };
   
   // Function to refresh token

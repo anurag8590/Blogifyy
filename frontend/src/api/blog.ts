@@ -9,8 +9,13 @@ export const createBlog = async (blogData: Partial<Blog>) => {
   
   // Get all blogs
   export const getBlogs = async () => {
-    const response = await api.get("/blogs/");
-    return response.data;
+    try {
+      const response = await api.get("/blogs/");
+      return response.data;
+    } catch (err) {
+      console.error("Failed to fetch blogs:", err);
+      throw new Error("An error occurred while fetching blogs. Please try again later.");
+    }
   };
   
   // Get a single blog by ID
@@ -30,11 +35,11 @@ export const createBlog = async (blogData: Partial<Blog>) => {
     await api.delete(`/blogs/${blogId}`);
   };
   
-  // Toggle publish status of a blog
-  export const togglePublishBlog = async (blogId: number) => {
-    const response = await api.put(`/${blogId}/toggle-publish`);
-    return response.data;
-  };
+  // // Toggle publish status of a blog
+  // export const togglePublishBlog = async (blogId: number) => {
+  //   const response = await api.put(`/${blogId}/toggle-publish`);
+  //   return response.data;
+  // };
 
   // export const getBlogbyUserId = async (id : number) =>{
   //   const response = await api.get(`/blogs/${id}`)

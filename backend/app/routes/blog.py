@@ -128,7 +128,7 @@ async def get_blog(
         dao_blog = BlogDAO(db)
         if get_type == "USER":
             blogs = await dao_blog.get_blogs_by_user(id)
-            if not blogs:
+            if blogs is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No blogs found for this user")
             return blogs
         

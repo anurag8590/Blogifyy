@@ -6,6 +6,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     const handleAuthChange = () => {
+      console.log("Auth change detected")
       setAuthenticated(isAuthenticated());
     };
 
@@ -26,5 +27,6 @@ export const useAuth = () => {
 
 // Function to manually trigger authentication change
 export const triggerAuthChange = () => {
+  console.log("Triggering auth change");
   window.dispatchEvent(new Event("authChange"));
 };
