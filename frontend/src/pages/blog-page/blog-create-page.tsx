@@ -50,13 +50,14 @@ export default function BlogCreatePage({
   const [editingMode, setEditingMode] = useState(!view);
   const [editorKey, setEditorKey] = useState(0);
 
-  // Reset all form states when initial values change
+  // reset all form states when initial values change
   useEffect(() => {
     setTitle(initialTitle);
     setContent(initialContent);
     setCategoryId(initialCategoryId);
   }, [initialTitle, initialContent, initialCategoryId]);
 
+  // handle is_published when switching from editing to not editing and vice versa
   useEffect(() => {
     if (!isEditing) {
       setIsPublished(initialIsPublished); 
@@ -73,7 +74,7 @@ export default function BlogCreatePage({
       return;
     }
 
-    let trimmed_content = content.replaceAll(/<\/?p[^>]*>/g, '').replace('<br>', '');
+    let trimmed_content = content.replace(/<\/?p[^>]*>/g, '').replace(/<br\s*\/?>/g, '\n');
     console.log(trimmed_content);
 
     const blogData = {

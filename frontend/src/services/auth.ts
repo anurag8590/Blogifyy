@@ -37,7 +37,7 @@ import axios, {
   const getStoredToken = () => localStorage.getItem("token");
   const getStoredRefreshToken = () => localStorage.getItem("refresh_token");
   
-  const storeAuthData = (authResponse: AuthResponse) => {
+  export const storeAuthData = (authResponse: AuthResponse) => {
     console.log("Storing auth data:", authResponse);
     localStorage.setItem("user_id", String(authResponse.user_id));
     localStorage.setItem("token", authResponse.access_token);
@@ -46,7 +46,7 @@ import axios, {
     localStorage.setItem("refresh_token", authResponse.refresh_token);
   };
   
-  const clearAuthData = () => {
+  export const clearAuthData = () => {
     console.log("Clearing auth data");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_id");
