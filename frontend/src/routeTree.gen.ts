@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as MyblogsBlogidImport } from './routes/myblogs/$blogid'
 import { Route as BlogsBlogidImport } from './routes/blogs/$blogid'
+import { Route as BlogsCategoryCatidImport } from './routes/blogs/category/$catid'
 
 // Create Virtual Routes
 
@@ -23,6 +24,9 @@ const NewblogLazyImport = createFileRoute('/newblog')()
 const MyBlogLazyImport = createFileRoute('/my-blog')()
 const LoginLazyImport = createFileRoute('/login')()
 const HomepageLazyImport = createFileRoute('/homepage')()
+const ContactLazyImport = createFileRoute('/contact')()
+const CategoriesLazyImport = createFileRoute('/categories')()
+const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -57,6 +61,24 @@ const HomepageLazyRoute = HomepageLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/homepage.lazy').then((d) => d.Route))
 
+const ContactLazyRoute = ContactLazyImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/contact.lazy').then((d) => d.Route))
+
+const CategoriesLazyRoute = CategoriesLazyImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/categories.lazy').then((d) => d.Route))
+
+const AboutLazyRoute = AboutLazyImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
@@ -75,6 +97,12 @@ const BlogsBlogidRoute = BlogsBlogidImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const BlogsCategoryCatidRoute = BlogsCategoryCatidImport.update({
+  id: '/blogs/category/$catid',
+  path: '/blogs/category/$catid',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -84,6 +112,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactLazyImport
       parentRoute: typeof rootRoute
     }
     '/homepage': {
@@ -135,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyblogsBlogidImport
       parentRoute: typeof rootRoute
     }
+    '/blogs/category/$catid': {
+      id: '/blogs/category/$catid'
+      path: '/blogs/category/$catid'
+      fullPath: '/blogs/category/$catid'
+      preLoaderRoute: typeof BlogsCategoryCatidImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -142,6 +198,9 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/about': typeof AboutLazyRoute
+  '/categories': typeof CategoriesLazyRoute
+  '/contact': typeof ContactLazyRoute
   '/homepage': typeof HomepageLazyRoute
   '/login': typeof LoginLazyRoute
   '/my-blog': typeof MyBlogLazyRoute
@@ -149,10 +208,14 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterLazyRoute
   '/blogs/$blogid': typeof BlogsBlogidRoute
   '/myblogs/$blogid': typeof MyblogsBlogidRoute
+  '/blogs/category/$catid': typeof BlogsCategoryCatidRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/about': typeof AboutLazyRoute
+  '/categories': typeof CategoriesLazyRoute
+  '/contact': typeof ContactLazyRoute
   '/homepage': typeof HomepageLazyRoute
   '/login': typeof LoginLazyRoute
   '/my-blog': typeof MyBlogLazyRoute
@@ -160,11 +223,15 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterLazyRoute
   '/blogs/$blogid': typeof BlogsBlogidRoute
   '/myblogs/$blogid': typeof MyblogsBlogidRoute
+  '/blogs/category/$catid': typeof BlogsCategoryCatidRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/about': typeof AboutLazyRoute
+  '/categories': typeof CategoriesLazyRoute
+  '/contact': typeof ContactLazyRoute
   '/homepage': typeof HomepageLazyRoute
   '/login': typeof LoginLazyRoute
   '/my-blog': typeof MyBlogLazyRoute
@@ -172,12 +239,16 @@ export interface FileRoutesById {
   '/register': typeof RegisterLazyRoute
   '/blogs/$blogid': typeof BlogsBlogidRoute
   '/myblogs/$blogid': typeof MyblogsBlogidRoute
+  '/blogs/category/$catid': typeof BlogsCategoryCatidRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/categories'
+    | '/contact'
     | '/homepage'
     | '/login'
     | '/my-blog'
@@ -185,9 +256,13 @@ export interface FileRouteTypes {
     | '/register'
     | '/blogs/$blogid'
     | '/myblogs/$blogid'
+    | '/blogs/category/$catid'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/categories'
+    | '/contact'
     | '/homepage'
     | '/login'
     | '/my-blog'
@@ -195,9 +270,13 @@ export interface FileRouteTypes {
     | '/register'
     | '/blogs/$blogid'
     | '/myblogs/$blogid'
+    | '/blogs/category/$catid'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/categories'
+    | '/contact'
     | '/homepage'
     | '/login'
     | '/my-blog'
@@ -205,11 +284,15 @@ export interface FileRouteTypes {
     | '/register'
     | '/blogs/$blogid'
     | '/myblogs/$blogid'
+    | '/blogs/category/$catid'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AboutLazyRoute: typeof AboutLazyRoute
+  CategoriesLazyRoute: typeof CategoriesLazyRoute
+  ContactLazyRoute: typeof ContactLazyRoute
   HomepageLazyRoute: typeof HomepageLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   MyBlogLazyRoute: typeof MyBlogLazyRoute
@@ -217,10 +300,14 @@ export interface RootRouteChildren {
   RegisterLazyRoute: typeof RegisterLazyRoute
   BlogsBlogidRoute: typeof BlogsBlogidRoute
   MyblogsBlogidRoute: typeof MyblogsBlogidRoute
+  BlogsCategoryCatidRoute: typeof BlogsCategoryCatidRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AboutLazyRoute: AboutLazyRoute,
+  CategoriesLazyRoute: CategoriesLazyRoute,
+  ContactLazyRoute: ContactLazyRoute,
   HomepageLazyRoute: HomepageLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   MyBlogLazyRoute: MyBlogLazyRoute,
@@ -228,6 +315,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterLazyRoute: RegisterLazyRoute,
   BlogsBlogidRoute: BlogsBlogidRoute,
   MyblogsBlogidRoute: MyblogsBlogidRoute,
+  BlogsCategoryCatidRoute: BlogsCategoryCatidRoute,
 }
 
 export const routeTree = rootRoute
@@ -241,17 +329,30 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/about",
+        "/categories",
+        "/contact",
         "/homepage",
         "/login",
         "/my-blog",
         "/newblog",
         "/register",
         "/blogs/$blogid",
-        "/myblogs/$blogid"
+        "/myblogs/$blogid",
+        "/blogs/category/$catid"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/about": {
+      "filePath": "about.lazy.tsx"
+    },
+    "/categories": {
+      "filePath": "categories.lazy.tsx"
+    },
+    "/contact": {
+      "filePath": "contact.lazy.tsx"
     },
     "/homepage": {
       "filePath": "homepage.lazy.tsx"
@@ -273,6 +374,9 @@ export const routeTree = rootRoute
     },
     "/myblogs/$blogid": {
       "filePath": "myblogs/$blogid.tsx"
+    },
+    "/blogs/category/$catid": {
+      "filePath": "blogs/category/$catid.tsx"
     }
   }
 }

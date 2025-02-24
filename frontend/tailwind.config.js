@@ -1,9 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
-    content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+    content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx,css}"],
   theme: {
   	extend: {
+		fontFamily: {
+			customFont: ['Super Dream', "Monospace"]
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

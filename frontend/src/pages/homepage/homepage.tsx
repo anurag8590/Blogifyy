@@ -1,40 +1,41 @@
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/use-category";
-import { useBlogs, useCategoryBlogs, useSearchBlogs } from "@/hooks/use-blog"; // Import hooks
-import { useEffect, useState } from "react";
+import { useBlogs, useCategoryBlogs } from "@/hooks/use-blog";
 import { useAuth } from "@/hooks/use-auth";
 import { Flip, toast } from "react-toastify";
 import { Blog } from "@/interface/Blog";
 import { BlogCategory } from "@/interface/Category";
-
+import { Search, PenSquare, BookOpen, Loader2 } from "lucide-react";
 
 export default function HomePage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
-  const { blogs: defaultBlogs, isLoading: isBlogsLoading, isError: isBlogsError} = useBlogs();
-  const { categories, isLoading: isCategoriesLoading, isError: isCategoriesError, error: categoriesError } = useCategories();
+  const { blogs: defaultBlogs, isLoading: isBlogsLoading, isError: isBlogsError } = useBlogs();
+  const { categories, isLoading: isCategoriesLoading, isError: isCategoriesError} = useCategories();
 
-  // State for search and category
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
-  const [displayedBlogs, setDisplayedBlogs] = useState<Blog[]>([]);
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const [isCategoryActive, setIsCategoryActive] = useState(false);
-
-  // Fetch category blogs
   const { data: categoryBlogs, isLoading: isCategoryBlogsLoading } = useCategoryBlogs(activeCategoryId!);
 
-  // Fetch search results
-  const { data: searchResults, isLoading: isSearchLoading } = useSearchBlogs(searchQuery);
+  // Memoized search results
+  const filteredBlogs = useMemo(() => {
+    const blogsToFilter = activeCategoryId ? categoryBlogs : defaultBlogs;
+    if (!blogsToFilter) return [];
+    
+    return blogsToFilter.filter((blog: Blog) => 
+      blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      blog.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, defaultBlogs, categoryBlogs, activeCategoryId]);
 
-  // Authentication and error handling
   useEffect(() => {
     if (!isAuthenticated) {
       navigate({ to: "/login" });
     }
-    if (isBlogsError) {
+    if (isBlogsError || isCategoriesError) {
       toast.error("Error! Returning Back to Login", {
         autoClose: 1500,
         position: "bottom-right",
@@ -42,113 +43,112 @@ export default function HomePage() {
       });
       navigate({ to: "/login" });
     }
-  }, [isAuthenticated, navigate, isBlogsError]);
-
-  // Handle blog display logic
-  useEffect(() => {
-    if (isSearchActive && searchResults) {
-      setDisplayedBlogs(searchResults);
-      setIsCategoryActive(false);
-      setActiveCategoryId(null);
-    } else if (isCategoryActive && categoryBlogs) {
-      setDisplayedBlogs(categoryBlogs);
-      setIsSearchActive(false);
-      setSearchQuery("");
-    } else if (defaultBlogs) {
-      setDisplayedBlogs(defaultBlogs);
-    }
-  }, [isSearchActive, isCategoryActive, searchResults, categoryBlogs, defaultBlogs]);
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      setIsSearchActive(true);
-      setIsCategoryActive(false);
-      setActiveCategoryId(null);
-    }
-  };
+  }, [isAuthenticated, navigate, isBlogsError, isCategoriesError]);
 
   const handleCategoryClick = (categoryId: number) => {
-    setActiveCategoryId(categoryId);
-    setIsCategoryActive(true);
-    setIsSearchActive(false);
-    setSearchQuery("");
-  };
-
-  const clearFilters = () => {
-    setIsSearchActive(false);
-    setIsCategoryActive(false);
-    setSearchQuery("");
-    setActiveCategoryId(null);
-    setDisplayedBlogs(defaultBlogs || []);
+    setActiveCategoryId(categoryId === activeCategoryId ? null : categoryId);
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-4">
-      <h2 className="text-4xl font-bold text-gray-800">Blogifyy</h2>
-
-      <div className="flex gap-4 mt-6">
-        <Button onClick={() => navigate({ to: "/newblog" })}>Create New Blog</Button>
-        <Button onClick={() => navigate({ to: "/my-blog" })} variant="outline">
-          My Blogs
-        </Button>
-      </div>
-
-      <div className="w-full max-w-lg mt-6 flex gap-2">
-        <Input
-          name="search"
-          id="search"
-          placeholder="Search blogs..."
-          className="flex-1 p-3 text-lg border rounded-md shadow-sm"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <Button onClick={handleSearch}>Search</Button>
-        {(isSearchActive || isCategoryActive) && (
-          <Button variant="outline" onClick={clearFilters}>
-            Clear Filters
-          </Button>
-        )}
-      </div>
-
-      <div className="w-full max-w-3xl mt-6 flex flex-wrap justify-center gap-3">
-        {isCategoriesLoading ? (
-          <p>Loading categories...</p>
-        ) : isCategoriesError ? (
-          <p className="text-red-500">Error: {categoriesError?.message}</p>
-        ) : (
-          categories?.map((category : BlogCategory) => (
+    <div className="bg-gradient-to-b from-purple-50 to-white">
+      {/* Heading Section */}
+      <div className="bg-gradient-to-r from-cyan-600 to-purple-900 text-white py-12 px-4 ">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-5xl font-bold mb-4 ">Blogifyy</h1>
+          <p className="text-xl text-purple-100 mb-8 ">Discover stories, thoughts, and expertise from writers on any topic.</p>
+          
+          {/* Action Buttons */}
+          <div className="flex justify-center gap-4">
             <Button
-              key={category.category_id}
-              variant={activeCategoryId === category.category_id ? "default" : "outline"}
-              onClick={() => handleCategoryClick(category.category_id)}
-              className="flex-auto items-center px-4 py-2 rounded-full"
+              onClick={() => navigate({ to: "/newblog" })}
+              variant="ghost"
+              className="text-white hover:text-purple-950 hover:bg-white shadow-lg rounded-full px-6 py-2 flex items-center gap-2"
             >
-              {category.name}
+              <PenSquare size={20} />
+              Write a Story
             </Button>
-          ))
-        )}
+            <Button
+              onClick={() => navigate({ to: "/my-blog" })}
+              variant="ghost"
+              className="text-white hover:text-purple-950 hover:bg-white shadow-lg rounded-full px-6 py-2 flex items-center gap-2"
+            >
+              <BookOpen size={20} />
+              My Stories
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <div className="w-full max-w-5xl mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isBlogsLoading || isSearchLoading || isCategoryBlogsLoading ? (
-          <p>Loading blogs...</p>
-        ) : displayedBlogs?.length > 0 ? (
-          displayedBlogs.map((blog: Blog) => (
-            <div key={blog.blog_id} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <h3 className="text-xl font-semibold">{blog.title}</h3>
-              <p className="text-gray-600 mt-2">{blog.content.slice(0, 30)}...</p>
-              <Link
-                to="/blogs/$blogid"
-                params={{ blogid: String(blog.blog_id) }}
-                state={{ author: String(blog.user_id) } as any}
-                className="text-blue-800 hover:text-blue-200"
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Search Bar */}
+        <div className="relative max-w-2xl mx-auto mb-12">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search stories..."
+            className="w-full pl-12 pr-4 py-3 text-lg rounded-full border-2 border-purple-100 focus:border-purple-500 focus:ring-purple-500 transition-all"
+          />
+        </div>
+
+        {/* Categories */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {isCategoriesLoading ? (
+            <Loader2 className="animate-spin text-purple-600" />
+          ) : (
+            categories?.map((category: BlogCategory) => (
+              <Button
+                key={category.category_id}
+                variant={activeCategoryId === category.category_id ? "default" : "outline"}
+                onClick={() => handleCategoryClick(category.category_id)}
+                className={`rounded-full px-6 py-2 transition-all ${
+                  activeCategoryId === category.category_id
+                    ? "bg-purple-600 text-white hover:bg-purple-700"
+                    : "border-purple-300 text-purple-600 hover:bg-purple-50"
+                }`}
               >
-                Read
-              </Link>
-            </div>
-          ))
+                {category.name}
+              </Button>
+            ))
+          )}
+        </div>
+
+        {/* Blog Grid */}
+        {isBlogsLoading || isCategoryBlogsLoading ? (
+          <div className="flex justify-center">
+            <Loader2 className="animate-spin text-purple-600" size={40} />
+          </div>
         ) : (
-          <p className="text-gray-500">No blogs found</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredBlogs.map((blog: Blog) => (
+              <div
+                key={blog.blog_id}
+                className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+              >
+                <div
+                  className="h-48 bg-cover bg-center"
+                  style={{ backgroundImage: `url(${blog.thumbnail || '/florian-klauer-mk7D-4UCfmg-unsplash.jpg'})` }}
+                />
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">{blog.title}</h3>
+                  <p className="text-gray-600 line-clamp-3 mb-4">{blog.content}</p>
+                  <Link
+                    to="/blogs/$blogid"
+                    params={{ blogid: String(blog.blog_id) }}
+                    state={{ author: String(blog.user_id) } as any}
+                    className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium gap-2 transition-colors"
+                  >
+                    Read More →
+                  </Link>
+                </div>
+              </div>
+            ))}
+            {filteredBlogs.length === 0 && (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No stories found matching your criteria</p>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

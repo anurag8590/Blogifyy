@@ -14,7 +14,7 @@ import { Flip, toast } from 'react-toastify';
 interface CommentsProps {
   blogId: number;
   currentUserId: number;
-  isBlogAuthor: boolean; // New prop to check if current user is blog author
+  isBlogAuthor: boolean; 
 }
 
 const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps) => {

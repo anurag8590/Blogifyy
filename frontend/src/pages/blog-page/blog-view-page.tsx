@@ -7,8 +7,8 @@ export default function BlogViewPage() {
   const location = useLocation();
   const author = location?.state?.author || null;
 
-  console.log(`author: ${author}`)
-  console.log(typeof(author))
+  // console.log(`author: ${author}`)
+  // console.log(typeof(author))
 
   return (
     <BlogCreatePage

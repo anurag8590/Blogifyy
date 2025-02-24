@@ -7,4 +7,5 @@ export interface Blog {
     is_published : boolean;
     user_id : number;
     category_id : number;
+    thumbnail?:any;
 }

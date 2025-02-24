@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
-from app.models.model import Blog
+from app.models.model import Blog, Category
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import selectinload
 
@@ -75,14 +75,45 @@ class BlogDAO:
         await self.db.commit()
         await self.db.refresh(blog)
         return blog
-    async def get_blogs_by_category_id(self, cat_id : int):
+    
+    async def get_blogs_by_category_id(self, category_id : int):
 
         """ Get Blogs by Category Id"""
+        CategoryAlias = aliased(Category)
 
+        result = await self.db.execute(
+            select(
+                Blog.blog_id, 
+                Blog.title, 
+                Blog.content, 
+                Blog.is_published, 
+                Blog.created_at, 
+                Blog.modified_at, 
+                Blog.user_id, 
+                Blog.category_id, 
+                CategoryAlias.name.label("category_name")  # Selecting category name explicitly
+            )
+            .join(CategoryAlias, Blog.category_id == CategoryAlias.category_id)
+            .filter(Blog.category_id == category_id)
+        )
+
+        # Unpacking results into a dictionary
+        blogs = [
+        {
+            "blog_id": row.blog_id,
+            "title": row.title,
+            "content": row.content,
+            "is_published": row.is_published,
+            "created_at": row.created_at,
+            "modified_at": row.modified_at,
+            "user_id": row.user_id,
+            "category_id": row.category_id,
+            "name": row.category_name,  # Category name
+        }
+        for row in result.all()
+        ]
         
-        result = await self.db.execute( select(Blog).filter(Blog.category_id == cat_id))
-        return result.scalars().all()
-    
+        return blogs
 
 class BlogSearchDAO:  # add this functionlity inside the same original BlogDAO class (incomplete)
     def __init__(self, db: AsyncSession):

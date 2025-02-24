@@ -48,11 +48,13 @@ import axios, {
   
   export const clearAuthData = () => {
     console.log("Clearing auth data");
+    localStorage.removeItem("token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_id");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("currentPath")
+    sessionStorage.removeItem("previousPath")
   };
   
   // Function to refresh token

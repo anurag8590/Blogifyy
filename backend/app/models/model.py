@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
-from sqlalchemy import Integer, String, Text, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import Mapped, mapped_column, relationship, backref
+from sqlalchemy import Integer, String, Text, DateTime, ForeignKey, Boolean, Column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.database import Base
 from sqlalchemy.sql import text
 
@@ -55,3 +55,12 @@ class Comment(Base):
 
     user: Mapped["User"] = relationship("User", back_populates="comments")
     blog: Mapped["Blog"] = relationship("Blog", back_populates="comments")
+
+class Contact(Base):
+    __tablename__ = "contacts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    subject = Column(String, nullable=False)
+    message = Column(Text, nullable=False)

@@ -31,7 +31,7 @@ export const useBlogs = () => {
 
   // const { data: categoryBlogs, isLoading: isCategoryBlogsLoading, isError: isCategoryBlogsError, error: categoryBlogsError } = useQuery({
   //   queryKey: ["categoryBlogs", catId],  // Include catId to refetch when it changes
-  //   queryFn: () => getBlogsByCategoryId(catId!),  // Ensure it's called properly
+  //   queryFn: () => getBlogsByCategoryId(catId),  // Ensure it's called properly
   //   enabled: !!catId,  // Prevent running if catId is undefined
   // });
 
