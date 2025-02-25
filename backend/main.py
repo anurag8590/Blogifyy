@@ -4,10 +4,8 @@ from app.database.database import create_table
 from app.routes import blog,user,comments,category,search,contact
 from fastapi.middleware.cors import CORSMiddleware
 
-
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    
+async def lifespan(app: FastAPI): 
     try:
         print("Creating database tables...")
         await create_table()
@@ -15,7 +13,6 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"Error creating database tables: {e}")
         raise
-    
     yield  
     print("Shutting down...")
 
@@ -32,7 +29,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(blog.router)
 app.include_router(user.router)

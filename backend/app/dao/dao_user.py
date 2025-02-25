@@ -28,7 +28,7 @@ class UserDAO:
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     async def create_user(self, username: str, password: str, email:str):
-        """Creates a new user in the database"""
+
         try:
             hashed_password = self.pwd_context.hash(password)
             user = User(username=username, hashed_password=hashed_password,email = email)
@@ -36,7 +36,6 @@ class UserDAO:
             self.db.add(user)
             await self.db.commit()
             await self.db.refresh(user)
-            
             return user
 
         except IntegrityError:
@@ -48,15 +47,15 @@ class UserDAO:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {str(e)}")
 
     async def get_user_by_username(self, username: str):
-        """Retrieves a user by username"""
+
         try:
-            result = await self.db.execute( select(User).filter(User.username == username))    #returns Result Object [(User,)]
-            return result.scalars().first()   #converts it to [User] and .first returns the User or it will return None
+            result = await self.db.execute( select(User).filter(User.username == username)) 
+            return result.scalars().first()
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {str(e)}") from e
 
     async def authenticate_user(self, username: str, password: str):
-        """Authenticates a user by verifying password"""
+
         try:
             user = await self.get_user_by_username(username)
             if user and self.pwd_context.verify(password, user.hashed_password):
@@ -66,7 +65,7 @@ class UserDAO:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {str(e)}") from e
 
     def create_access_token(self, data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
-        """Generates a JWT access token"""
+
         try:
             to_encode = data.copy()
             expire = datetime.now(timezone.utc) + expires_delta
@@ -74,8 +73,9 @@ class UserDAO:
             return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         except jwt.PyJWTError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Token generation error: {str(e)}") from e
+        
     def decode_access_token(self, token: str):
-        """Decodes and validates the JWT token"""
+
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             return payload
@@ -83,14 +83,14 @@ class UserDAO:
             return None
 
     def create_refresh_token(self, data: dict, expires_delta: timedelta = timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)):
-        """Generate a refresh token"""
+
         to_encode = data.copy()
         expire = datetime.now(timezone.utc) + expires_delta
         to_encode.update({"exp": expire})
         return jwt.encode(to_encode, REFRESH_SECRET_KEY, algorithm=ALGORITHM)
     
     def verify_refresh_token(self, token: str):
-        """Decode and verify refresh token"""
+
         try:
             return jwt.decode(token, REFRESH_SECRET_KEY, algorithms=[ALGORITHM])
         except jwt.ExpiredSignatureError as e:
@@ -99,7 +99,7 @@ class UserDAO:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token") from e
             
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)) -> User:
-    """Dependency that fetches the current user based on the provided token."""
+    
     user_dao = UserDAO(db)
     
     payload = user_dao.decode_access_token(token)

@@ -162,7 +162,6 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
         )}
       </div>
       
-      {/* New Comment Form */}
       <form onSubmit={handleSubmitComment} className="flex gap-2">
         <Input
           value={newComment}
@@ -178,7 +177,6 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
         </Button>
       </form>
 
-      {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment.comment_id} className="bg-gray-50 p-4 rounded-lg">

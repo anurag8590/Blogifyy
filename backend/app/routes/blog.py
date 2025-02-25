@@ -11,7 +11,7 @@ router = APIRouter(prefix="/blogs", tags=["blogs"])
 
 @router.post("/", response_model=BlogResponseDTO)
 async def create_blog(blog: BlogCreateDTO, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
-    """Creates a new blog linked to the current user"""
+
     try:
         dao_blog = BlogDAO(db)
         new_blog = await dao_blog.create_blog(
@@ -27,7 +27,7 @@ async def create_blog(blog: BlogCreateDTO, current_user: User = Depends(dao_user
 
 @router.get("/", response_model=List[BlogResponseDTO])
 async def get_blogs(db: AsyncSession = Depends(get_db), current_user: User = Depends(dao_user.get_current_user)):
-    """Fetches all blogs"""
+
     try:
         dao_blog = BlogDAO(db)
         blogs = await dao_blog.get_all_blogs()
@@ -37,7 +37,7 @@ async def get_blogs(db: AsyncSession = Depends(get_db), current_user: User = Dep
 
 @router.put("/{blog_id}", response_model=BlogResponseDTO)
 async def update_blog(blog_id: int, blog: BlogUpdateDTO, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
-    """Updates a blog's title or content"""
+
     try:
         dao_blog = BlogDAO(db)
         existing_blog = await dao_blog.get_blogs_by_id(blog_id)
@@ -59,7 +59,7 @@ async def update_blog(blog_id: int, blog: BlogUpdateDTO, current_user: User = De
 
 @router.delete("/{blog_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_blog(blog_id: int, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
-    """Deletes a blog by its ID"""
+
     try:
         dao_blog = BlogDAO(db)
         blog = await dao_blog.get_blogs_by_id(blog_id)
@@ -75,10 +75,9 @@ async def delete_blog(blog_id: int, current_user: User = Depends(dao_user.get_cu
 @router.get("/{id}/", response_model = Union[BlogResponseDTO, List[BlogResponseDTO]])
 async def get_blog(
     id: int, 
-    db: AsyncSession = Depends(get_db),get_type: str = Query(..., regex="^(USER|BLOG|CATG)$"),
+    db: AsyncSession = Depends(get_db), get_type: str = Query(..., regex="^(USER|BLOG|CATG)$"),
     current_user: User = Depends(dao_user.get_current_user)
 ):
-    """Fetches a blog by blog_id or user_id or category_id"""
 
     try:
         dao_blog = BlogDAO(db)

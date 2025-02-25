@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white pt-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Hero Section */}
+
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Hi, I'm Anurag 👋
@@ -14,7 +14,6 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* Main Content */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-12">
           <div className="prose max-w-none">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">
@@ -67,7 +66,6 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Contact Section */}
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
             Let's Connect

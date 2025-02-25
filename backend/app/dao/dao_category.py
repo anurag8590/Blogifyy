@@ -9,19 +9,7 @@ class CategoryDAO:
         self.db = db
 
     async def create_category(self, name: str, description: Optional[str] = None) -> Category:
-        """
-        Creates a new category in the database.
-        
-        Args:
-            name: The name of the category
-            description: Optional description of the category
-            
-        Returns:
-            The newly created Category object
-            
-        Raises:
-            SQLAlchemyError: If there's an error during database operation
-        """
+
         try:
             new_category = Category(name=name, description=description)
             self.db.add(new_category)
@@ -33,15 +21,7 @@ class CategoryDAO:
             raise e
 
     async def get_all_categories(self) -> List[Category]:
-        """
-        Retrieves all categories from the database.
-        
-        Returns:
-            List of Category objects
-            
-        Raises:
-            SQLAlchemyError: If there's an error during database operation
-        """
+
         try:
             query = select(Category)
             result = await self.db.execute(query)
@@ -51,18 +31,7 @@ class CategoryDAO:
             raise e
 
     async def get_category_by_id(self, category_id: int) -> Optional[Category]:
-        """
-        Retrieves a category by its ID.
-        
-        Args:
-            category_id: The ID of the category to retrieve
-            
-        Returns:
-            Category object if found, None otherwise
-            
-        Raises:
-            SQLAlchemyError: If there's an error during database operation
-        """
+
         try:
             query = select(Category).where(Category.category_id == category_id)
             result = await self.db.execute(query)
@@ -77,20 +46,7 @@ class CategoryDAO:
         name: Optional[str] = None, 
         description: Optional[str] = None
     ) -> Optional[Category]:
-        """
-        Updates an existing category.
-        
-        Args:
-            category_id: The ID of the category to update
-            name: Optional new name for the category
-            description: Optional new description for the category
-            
-        Returns:
-            Updated Category object if found, None otherwise
-            
-        Raises:
-            SQLAlchemyError: If there's an error during database operation
-        """
+
         try:
             category = await self.get_category_by_id(category_id)
             if category is None:
@@ -109,18 +65,7 @@ class CategoryDAO:
             raise e
 
     async def delete_category(self, category_id: int) -> bool:
-        """
-        Deletes a category by its ID.
-        
-        Args:
-            category_id: The ID of the category to delete
-            
-        Returns:
-            True if category was deleted, False if category was not found
-            
-        Raises:
-            SQLAlchemyError: If there's an error during database operation
-        """
+
         try:
             category = await self.get_category_by_id(category_id)
             if category is None:

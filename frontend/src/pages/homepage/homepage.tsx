@@ -11,11 +11,11 @@ import { BlogCategory } from "@/interface/Category";
 import { Search, PenSquare, BookOpen, Loader2 } from "lucide-react";
 
 export default function HomePage() {
+  
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const { blogs: defaultBlogs, isLoading: isBlogsLoading, isError: isBlogsError } = useBlogs();
   const { categories, isLoading: isCategoriesLoading, isError: isCategoriesError} = useCategories();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const { data: categoryBlogs, isLoading: isCategoryBlogsLoading } = useCategoryBlogs(activeCategoryId!);
@@ -89,7 +89,6 @@ export default function HomePage() {
             className="w-full pl-12 pr-4 py-3 text-lg rounded-full border-2 border-purple-100 focus:border-purple-500 focus:ring-purple-500 transition-all"
           />
         </div>
-
 
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {isCategoriesLoading ? (

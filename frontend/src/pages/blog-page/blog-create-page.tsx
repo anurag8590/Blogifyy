@@ -6,14 +6,7 @@ import { Flip, toast } from "react-toastify";
 import RichTextEditor from "@/components/editor/editor";
 import { Save, Edit, ArrowLeft, Trash, BookOpen, Eye, EyeOff } from "lucide-react";
 import { useBlogs } from "@/hooks/use-blog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import CommentComponent from "../comment/comment";
 import { useCategories } from "@/hooks/use-category";
 import { BlogCategory } from "@/interface/Category";
@@ -142,7 +135,7 @@ export default function BlogCreatePage({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white">
-      {/* Top Banner */}
+
       <div className="bg-gradient-to-r from-cyan-600 to-purple-900 text-white py-4 sm:py-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
@@ -204,7 +197,7 @@ export default function BlogCreatePage({
 
       <main className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
         <div className="space-y-4 sm:space-y-6">
-          {/* Title and Settings Section */}
+
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-8">
             <Input
               value={title}
@@ -253,7 +246,6 @@ export default function BlogCreatePage({
             </div>
           </div>
 
-          {/* Editor Section */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-8 min-h-[400px] sm:min-h-[600px]">
             <RichTextEditor
               key={editorKey}
@@ -263,7 +255,6 @@ export default function BlogCreatePage({
             />
           </div>
 
-          {/* Comments Section */}
           {blogId && (
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-8">
               <div className="flex items-center gap-2 mb-4 sm:mb-6">

@@ -14,8 +14,6 @@ class BlogDAO:
     
     async def get_all_blogs(self) -> List[Blog]:
 
-        """Fetch all blogs from the database."""
-
         result = await self.db.execute(select(Blog).filter(Blog.is_published == True))
         return result.scalars().all()
  
@@ -56,23 +54,8 @@ class BlogDAO:
             await self.db.delete(blog)
             await self.db.commit()
         return blog
-
-    async def toggle_publish_status(self, blog_id: int):
-
-        """Toggle the blog's published status."""
-
-        query = select(Blog).filter(Blog.blog_id == blog_id)
-        result = await self.db.execute(query)
-        blog = result.scalars().first()
-
-        blog.is_published = not blog.is_published  
-        await self.db.commit()
-        await self.db.refresh(blog)
-        return blog
     
     async def get_blogs_by_category_id(self, category_id : int):
-
-        """ Get Blogs by Category Id"""
 
         CategoryAlias = aliased(Category)
 
@@ -110,16 +93,12 @@ class BlogDAO:
         return blogs
 
 class BlogSearchDAO:
+    
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def search_blogs(
-        self,
-        search_query: str
-    ):
-        """
-        Search blogs by title, content, or category with pagination.
-        """
+    async def search_blogs( self, search_query: str):
+     
         query = select(Blog)
 
         if search_query:

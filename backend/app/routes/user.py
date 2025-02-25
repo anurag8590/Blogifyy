@@ -1,19 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-import jwt
 from app.database.database import get_db
 from app.dao.dao_user import UserDAO
 from app.schemas.schema_user import UserCreateDTO, RefreshTokenDTO
+import jwt
 
 router = APIRouter(tags=["auth"])
 
-
 @router.post("/register/")
 async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_db)):
-
-    """Registers a new user"""
 
     try:
         dao_user = UserDAO(db)
@@ -38,11 +34,8 @@ async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_d
 @router.post("/token/")
 async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
 
-    """Generates a JWT token for authentication"""
-
     try:
         dao_user = UserDAO(db)
-
 
         user_retrieved = await dao_user.authenticate_user(user.username, user.password)
 
@@ -59,17 +52,14 @@ async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
                 "username":user_retrieved.username,
                 "email":user_retrieved.email}
 
-    except jwt.PyJWTError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token generation failed") from e
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
 
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {str(e)}") from e
 
-
 @router.post("/refresh/")
-async def refresh_token(refresh_data: RefreshTokenDTO, db: Session = Depends(get_db)):
-
-    """Generate a new access token using a refresh token"""
+async def refresh_token(refresh_data: RefreshTokenDTO, db: AsyncSession = Depends(get_db)):
     
     dao_user = UserDAO(db)
 

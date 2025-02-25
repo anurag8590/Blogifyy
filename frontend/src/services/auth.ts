@@ -52,7 +52,7 @@ import axios, {
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     sessionStorage.removeItem("currentPath")
-    sessionStorage.removeItem("previousPath")
+    sessionStorage.removeItem("pathHistory")
   };
   
   const refreshToken = async () => {
@@ -138,25 +138,8 @@ import axios, {
     }
   };
   
-  export const logout = () => {
-    clearAuthData();
-    throw redirect({ to: "/login" });
-  };
-  
   export const isAuthenticated = (): boolean => {
     return !!getStoredToken();
   };
   
-  export function authMiddleware() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: window.location.pathname,
-        },
-      });
-    }
-  }
-
 export default api;

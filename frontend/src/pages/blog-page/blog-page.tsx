@@ -29,7 +29,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-0 py-0">
-      {/* Heading Section */}
+
       <div className="bg-gradient-to-r from-cyan-600 to-purple-900 text-white py-9 px-4 relative">
           <div className="absolute left-4 top-4">
             <Button
@@ -86,7 +86,7 @@ export default function BlogPage() {
                 key={blog.blog_id}
                 className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300"
               >
-                {/* Thumbnail */}
+
                 <div
                   className="h-48 bg-cover bg-center bg-purple-100"
                   style={{ 
@@ -97,7 +97,7 @@ export default function BlogPage() {
                 />
                 
                 <div className="p-6">
-                  {/* Status Badge */}
+
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${getStatusColor(blog.is_published)}`}>
                     {getStatusText(blog.is_published)}
                   </span>

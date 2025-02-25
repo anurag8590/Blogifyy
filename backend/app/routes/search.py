@@ -6,15 +6,7 @@ from app.dao.dao_blog import BlogSearchDAO
 router = APIRouter(prefix="/search", tags=["search"])
 
 @router.get("/blogs")
-async def search_blogs(
-    q: str = Query(..., description="Search query"),
-    db: AsyncSession = Depends(get_db)
-):
-    
-    """
-    Search blogs by title, content, or category.
-    Supports multi-word search and pagination.
-    """
+async def search_blogs( q: str = Query(..., description="Search query"), db: AsyncSession = Depends(get_db)):
 
     search_dao = BlogSearchDAO(db)
     return await search_dao.search_blogs(
