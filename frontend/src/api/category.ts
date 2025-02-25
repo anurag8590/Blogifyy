@@ -14,8 +14,3 @@ export const getCategoryById = async (categoryId: number) => {
 const response = await api.get(`/categories/${categoryId}`);
 return response.data;
 };
-
-// export const updateCategory = async (categoryId: number, updatedData: { name?: string; description?: string }) => {
-// const response = await api.put(`/categories/${categoryId}`, updatedData);
-// return response.data;
-// };

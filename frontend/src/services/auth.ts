@@ -5,7 +5,6 @@ import axios, {
   } from "axios";
   import { redirect } from "@tanstack/react-router";
   
-  // Interface definitions
   interface AuthResponse {
     access_token: string;
     refresh_token: string;
@@ -32,8 +31,7 @@ import axios, {
       "Content-Type": "application/json",
     },
   });
-  
-  // Auth storage helpers
+
   const getStoredToken = () => localStorage.getItem("token");
   const getStoredRefreshToken = () => localStorage.getItem("refresh_token");
   
@@ -57,7 +55,6 @@ import axios, {
     sessionStorage.removeItem("previousPath")
   };
   
-  // Function to refresh token
   const refreshToken = async () => {
     const refresh_token = getStoredRefreshToken();
     if (!refresh_token) {
@@ -78,7 +75,6 @@ import axios, {
     }
   };
   
-  // Request interceptor
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
       const token = getStoredToken();
@@ -90,7 +86,6 @@ import axios, {
     (error) => Promise.reject(error)
   );
   
-  // Response interceptor
   api.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
@@ -114,7 +109,6 @@ import axios, {
     }
   );
   
-  // Auth endpoints
   export const register = async (credentials: RegisterCredentials) => {
     const response = await api.post<{ message: string }>("/register/", credentials);
     return response.data;
@@ -166,4 +160,3 @@ import axios, {
   }
 
 export default api;
-  

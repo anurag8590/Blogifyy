@@ -1,12 +1,10 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, select, func
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
+from typing import List
 from app.models.model import Blog, Category
 from sqlalchemy.orm import aliased
-from sqlalchemy.orm import selectinload
-
 from app.models.model import Blog
  
 class BlogDAO:
@@ -36,12 +34,10 @@ class BlogDAO:
     async def get_blogs_by_user(self, user_id: int):
 
         result = await self.db.execute( select(Blog).filter(Blog.user_id == user_id))
-        # print(f"reusultant blogs for user : {type(result.scalars().all())}")
+
         return result.scalars().all()
  
     async def update_blog(self, blog_id: int, title: str, is_published : bool, content: str, category_id : int):
-
-        #check if the blog exists or not (incompleted)
 
         blog = await self.get_blogs_by_id(blog_id)
         if blog:
@@ -54,8 +50,6 @@ class BlogDAO:
         return blog
  
     async def delete_blog(self, blog_id: int):
- 
-        #check if the blog exists or not (incompleted)
 
         blog = await self.get_blogs_by_id(blog_id)
         if blog:
@@ -79,6 +73,7 @@ class BlogDAO:
     async def get_blogs_by_category_id(self, category_id : int):
 
         """ Get Blogs by Category Id"""
+
         CategoryAlias = aliased(Category)
 
         result = await self.db.execute(
@@ -91,13 +86,12 @@ class BlogDAO:
                 Blog.modified_at, 
                 Blog.user_id, 
                 Blog.category_id, 
-                CategoryAlias.name.label("category_name")  # Selecting category name explicitly
+                CategoryAlias.name.label("category_name")
             )
             .join(CategoryAlias, Blog.category_id == CategoryAlias.category_id)
             .filter(Blog.category_id == category_id)
         )
 
-        # Unpacking results into a dictionary
         blogs = [
         {
             "blog_id": row.blog_id,
@@ -108,58 +102,34 @@ class BlogDAO:
             "modified_at": row.modified_at,
             "user_id": row.user_id,
             "category_id": row.category_id,
-            "name": row.category_name,  # Category name
+            "name": row.category_name,
         }
         for row in result.all()
         ]
         
         return blogs
 
-class BlogSearchDAO:  # add this functionlity inside the same original BlogDAO class (incomplete)
+class BlogSearchDAO:
     def __init__(self, db: AsyncSession):
         self.db = db
 
     async def search_blogs(
         self,
-        search_query: str,
-        # category_id: Optional[int] = None,
-        # page: int = 1,
-        # page_size: int = 10
+        search_query: str
     ):
         """
         Search blogs by title, content, or category with pagination.
         """
         query = select(Blog)
 
-        # Apply search filters if query exists
         if search_query:
             terms = search_query.strip().split()
             search_conditions = [or_(Blog.title.ilike(f"%{term}%"), Blog.content.ilike(f"%{term}%")) for term in terms]
             query = query.filter(*search_conditions)
 
-        # # Apply category filter if provided
-        # if category_id:
-        #     query = query.filter(Blog.category_id == category_id)
-
-        # Order by most recent & paginate
-        query = query.order_by(Blog.created_at.desc()).filter(Blog.is_published == True)  #.offset((page - 1) * page_size).limit(page_size)
+        query = query.order_by(Blog.created_at.desc()).filter(Blog.is_published == True)
         
-        # Fetch results
         result = await self.db.execute(query)
         blogs = result.scalars().all()
 
-        # # Get total count for pagination
-        # count_query = select(func.count()).select_from(Blog)
-        # if search_query:
-        #     count_query = count_query.filter(*search_conditions)
-        # if category_id:
-        #     count_query = count_query.filter(Blog.category_id == category_id)
-
-        # total_count = (await self.db.execute(count_query)).scalar()
-
         return blogs
-            # "total": total_count,
-            # "page": page,
-            # "page_size": page_size,
-            # "total_pages": (total_count + page_size - 1) // page_size
-        

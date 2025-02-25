@@ -30,7 +30,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-lg fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo and Brand */}
+
           <div className="flex items-center">
             <button
               onClick={() => navigate({ to: "/homepage" })}
@@ -41,10 +41,8 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
            
-            {/* Navigation Links */}
             <div className="flex items-center space-x-6">
               {navLinks.map((link) => (
                 <button
@@ -56,7 +54,6 @@ const Navbar = () => {
                 </button>
               ))}
               
-              {/* Logout Button */}
               <button
                 onClick={logout}
                 className="bg-gradient-to-r from-purple-600 to-purple-800 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 hover:opacity-90"
@@ -66,7 +63,6 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -77,7 +73,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">

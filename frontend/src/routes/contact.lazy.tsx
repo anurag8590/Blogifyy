@@ -3,5 +3,3 @@ import ContactPage from '@/pages/contact/contact'
 export const Route = createLazyFileRoute('/contact')({
   component: ContactPage
 })
-
-

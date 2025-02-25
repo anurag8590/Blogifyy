@@ -74,7 +74,7 @@ export default function AboutPage() {
           </h2>
           <div className="flex justify-center space-x-6">
             <a 
-              href="http://github.com/anurag8590" 
+              href="https://github.com/anurag8590" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-purple-600 transition-colors"
@@ -82,7 +82,7 @@ export default function AboutPage() {
               <Github size={24} />
             </a>
             <a 
-              href="http://github.com/anurag8590" 
+              href="https://linkedin.com/in/anurag8590" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-purple-600 transition-colors"

@@ -4,11 +4,8 @@ import { useLocation } from "@tanstack/react-router";
 
 export default function BlogViewPage() {
   const blog = useLoaderData({from: "/blogs/$blogid"});
-  const location = useLocation();
+  const location = useLocation()  as { state: { author?: number } };;
   const author = location?.state?.author || null;
-
-  // console.log(`author: ${author}`)
-  // console.log(typeof(author))
 
   return (
     <BlogCreatePage

@@ -1,8 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
 from fastapi import HTTPException
-from typing import List, Optional
+from typing import Optional
 from app.models.model import Comment
 
 class CommentDAO:
@@ -29,20 +28,6 @@ class CommentDAO:
 
         result = await (self.db.execute(select(Comment).filter(Comment.comment_id == comment_id)))
         return result.scalars().first()
-
-    # async def get_comments_by_blog_id(self, blog_id: int) -> List[Comment]:
-    #     """Fetches all comments for a blog"""
-    #     query = (
-    #         select(Comment)
-    #         .options(
-    #             selectinload(Comment.user),
-    #             selectinload(Comment.blog)
-    #         )
-    #         .filter(Comment.blog_id == blog_id)
-    #         .order_by(Comment.created_at)
-    #     )
-    #     result = await self.db.execute(query)
-    #     return result.scalars().all()
 
     async def update_comment(self, comment_id: int, content: str) -> Optional[Comment]:
 

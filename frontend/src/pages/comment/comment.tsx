@@ -23,13 +23,11 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
   const [editedContent, setEditedContent] = useState("");
   const queryClient = useQueryClient();
 
-  // Query for fetching comments
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", blogId],
     queryFn: () => fetchComments(blogId),
   });
 
-  // Mutation for creating comments
   const createCommentMutation = useMutation({
     mutationFn: (newComment: { content: string; blog_id: number }) =>
       createComment(newComment),
@@ -50,7 +48,7 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
     },
   });
 
-  // Mutation for updating comments
+
   const updateCommentMutation = useMutation({
     mutationFn: ({ commentId, updatedData }: { commentId: number; updatedData: { content: string } }) =>
       updateComment(commentId, updatedData),
@@ -71,7 +69,6 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
     },
   });
 
-  // Mutation for deleting comments
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId: number) => deleteComment(commentId),
     onSuccess: () => {
@@ -135,7 +132,6 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
     }
   };
 
-  // Function to check if user can edit/delete a specific comment
   const canManageComment = (commentUserId: number) => {
     return currentUserId === commentUserId;
   };
@@ -148,14 +144,13 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Comments</h2>
-        {/* Show delete all button only for blog author */}
+
         {isBlogAuthor && comments.length > 0 && (
           <Button
             variant="destructive"
             size="sm"
             onClick={() => {
               if (window.confirm("Are you sure you want to delete all comments? This action cannot be undone.")) {
-                // You'll need to implement this API endpoint
                 comments.forEach(comment => deleteCommentMutation.mutate(comment.comment_id));
               }
             }}
@@ -222,11 +217,9 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
                   Posted by User #{comment.user_id} • {new Date(comment.created_at).toLocaleDateString()}
                 </p>
               </div>
-              {/* <div>{console.log(`Comment.user_id ${comment.user_id}, User_id ${currentUserId}, isBlogAuthor ${isBlogAuthor}`)}</div> */}
-              {/* Show action buttons based on permissions */}
+
               {(canManageComment(comment.user_id) || isBlogAuthor) && (
                 <div className="flex gap-2 ml-4">
-                  {/* Only show edit button for comment owner */}
                   {canManageComment(comment.user_id) && (
                     <Button
                       size="sm"
@@ -238,7 +231,7 @@ const CommentComponent = ({ blogId, currentUserId, isBlogAuthor }: CommentsProps
                       <Edit2 className="w-4 h-4" />
                     </Button>
                   )}
-                  {/* Show delete button for both comment owner and blog author */}
+
                   <Button
                     size="sm"
                     variant="ghost"

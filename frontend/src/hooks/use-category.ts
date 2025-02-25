@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {
   getCategories,
   createCategory,
-  // updateCategory,
 } from "@/api/category";
 
 export const useCategories = () => {
@@ -20,21 +19,12 @@ export const useCategories = () => {
     },
   });
 
-  // const updateMutation = useMutation({
-  //   mutationFn: ({ categoryId, updatedData }: { categoryId: number; updatedData: { name?: string; description?: string } }) =>
-  //     updateCategory(categoryId, updatedData),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["categories"] });
-  //   },
-  // });
-
   return {
     categories,
     isLoading,
     isFetching,
     isError,
     error,
-    createMutation,
-    // updateMutation,
+    createMutation
   };
 };

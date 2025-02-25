@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from app.schemas.schema_user import UserResponseDTO
 from app.schemas.schema_category import CategoryResponseDTO
 from app.schemas.schema_comment import CommentResponseDTO

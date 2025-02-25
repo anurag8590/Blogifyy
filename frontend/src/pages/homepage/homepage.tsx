@@ -20,7 +20,6 @@ export default function HomePage() {
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const { data: categoryBlogs, isLoading: isCategoryBlogsLoading } = useCategoryBlogs(activeCategoryId!);
 
-  // Memoized search results
   const filteredBlogs = useMemo(() => {
     const blogsToFilter = activeCategoryId ? categoryBlogs : defaultBlogs;
     if (!blogsToFilter) return [];
@@ -51,13 +50,13 @@ export default function HomePage() {
 
   return (
     <div className="bg-gradient-to-b from-purple-50 to-white">
-      {/* Heading Section */}
+
       <div className="bg-gradient-to-r from-cyan-600 to-purple-900 text-white py-12 px-4 ">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4 ">Blogifyy</h1>
           <p className="text-xl text-purple-100 mb-8 ">Discover stories, thoughts, and expertise from writers on any topic.</p>
           
-          {/* Action Buttons */}
+
           <div className="flex justify-center gap-4">
             <Button
               onClick={() => navigate({ to: "/newblog" })}
@@ -80,7 +79,7 @@ export default function HomePage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Search Bar */}
+
         <div className="relative max-w-2xl mx-auto mb-12">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
           <Input
@@ -91,7 +90,7 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Categories */}
+
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {isCategoriesLoading ? (
             <Loader2 className="animate-spin text-purple-600" />
@@ -113,7 +112,6 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Blog Grid */}
         {isBlogsLoading || isCategoryBlogsLoading ? (
           <div className="flex justify-center">
             <Loader2 className="animate-spin text-purple-600" size={40} />

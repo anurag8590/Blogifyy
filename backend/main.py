@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database.database import create_table
-from app.routes import blog,user,comments,category,search
+from app.routes import blog,user,comments,category,search,contact
 from fastapi.middleware.cors import CORSMiddleware
-
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    
     try:
         print("Creating database tables...")
         await create_table()
@@ -39,3 +39,4 @@ app.include_router(user.router)
 app.include_router(comments.router)
 app.include_router(search.router)
 app.include_router(category.router)
+app.include_router(contact.router)

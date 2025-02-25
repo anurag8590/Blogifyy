@@ -12,7 +12,9 @@ router = APIRouter(tags=["auth"])
 
 @router.post("/register/")
 async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_db)):
+
     """Registers a new user"""
+
     try:
         dao_user = UserDAO(db)
         created_user = await dao_user.create_user(user_data.username, user_data.password,user_data.email)
@@ -35,7 +37,9 @@ async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_d
 
 @router.post("/token/")
 async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+
     """Generates a JWT token for authentication"""
+
     try:
         dao_user = UserDAO(db)
 
@@ -47,8 +51,6 @@ async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
 
         access_token = dao_user.create_access_token({"sub": user_retrieved.username})
         refresh_token = dao_user.create_refresh_token({"user": user_retrieved.username})
-
-        # print("refresh_token",refresh_token)
 
         return {"access_token": access_token, 
                 "refresh_token":refresh_token,
@@ -66,7 +68,9 @@ async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
 
 @router.post("/refresh/")
 async def refresh_token(refresh_data: RefreshTokenDTO, db: Session = Depends(get_db)):
+
     """Generate a new access token using a refresh token"""
+    
     dao_user = UserDAO(db)
 
     try:

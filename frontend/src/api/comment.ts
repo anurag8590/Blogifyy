@@ -1,7 +1,6 @@
 import api from "@/services/auth";
 import { BlogComment } from "@/interface/Comments";
 
-
 export const createComment = async (commentData: { content: string; blog_id: number }) => {
     const response = await api.post("/comments/", commentData);
     return response.data;

@@ -4,7 +4,6 @@ import {
   createBlog,
   updateBlog,
   deleteBlog,
-  // togglePublishBlog,
   getBlogsByUserId, 
   getBlogsByCategoryId, 
   searchBlogs}
@@ -29,12 +28,6 @@ export const useBlogs = () => {
     retry: false
   });
 
-  // const { data: categoryBlogs, isLoading: isCategoryBlogsLoading, isError: isCategoryBlogsError, error: categoryBlogsError } = useQuery({
-  //   queryKey: ["categoryBlogs", catId],  // Include catId to refetch when it changes
-  //   queryFn: () => getBlogsByCategoryId(catId),  // Ensure it's called properly
-  //   enabled: !!catId,  // Prevent running if catId is undefined
-  // });
-
   const createMutation = useMutation({
     mutationFn: (newBlog: Partial<Blog>) => createBlog(newBlog),
     onSuccess: () => {
@@ -57,20 +50,9 @@ export const useBlogs = () => {
     },
   });
 
-  // const togglePublishMutation = useMutation({
-  //   mutationFn: (blogId: number) => togglePublishBlog(blogId),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["blogs"] });
-  //   },
-  // });
-
   return {
     blogs,
     userBlogs,
-    // categoryBlogs,
-    // isCategoryBlogsLoading,
-    // isCategoryBlogsError,
-    // categoryBlogsError,
     isLoading,
     isUserBlogsLoading,
     isUserBlogsError,
@@ -80,8 +62,7 @@ export const useBlogs = () => {
     error,
     createMutation,
     updateMutation,
-    deleteMutation,
-    // togglePublishMutation,
+    deleteMutation
   };
 };
 
@@ -92,7 +73,6 @@ export const useCategoryBlogs = (catId?: number) => {
     enabled: !!catId,
   });
 };
-
 
 export const useSearchBlogs = (query?: string) => {
   return useQuery({

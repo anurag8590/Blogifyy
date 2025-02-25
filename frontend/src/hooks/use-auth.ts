@@ -10,10 +10,8 @@ export const useAuth = () => {
       setAuthenticated(isAuthenticated());
     };
 
-    // Listen for storage changes in other tabs
     window.addEventListener("storage", handleAuthChange);
 
-    // Manually trigger on login/logout
     window.addEventListener("authChange", handleAuthChange);
 
     return () => {
@@ -25,7 +23,6 @@ export const useAuth = () => {
   return authenticated;
 };
 
-// Function to manually trigger authentication change
 export const triggerAuthChange = () => {
   console.log("Triggering auth change");
   window.dispatchEvent(new Event("authChange"));

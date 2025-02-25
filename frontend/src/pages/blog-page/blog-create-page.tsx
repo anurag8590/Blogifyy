@@ -95,7 +95,7 @@ export default function BlogCreatePage({
         {
           onSuccess: () => {
             toast.success("Blog post updated successfully!", {
-              autoClose: 2000,
+              autoClose: 1500,
               position: "bottom-right",
               transition: Flip,
             });
@@ -108,7 +108,7 @@ export default function BlogCreatePage({
       createMutation.mutate(blogData, {
         onSuccess: () => {
           toast.success("Blog post created successfully!", {
-            autoClose: 2000,
+            autoClose: 1500,
             position: "bottom-right",
             transition: Flip,
           });
@@ -123,7 +123,7 @@ export default function BlogCreatePage({
       deleteMutation.mutate(Number(blogId), {
         onSuccess: () => {
           toast.success("Blog post deleted successfully!", {
-            autoClose: 2000,
+            autoClose: 1500,
             position: "bottom-right",
             transition: Flip,
           });

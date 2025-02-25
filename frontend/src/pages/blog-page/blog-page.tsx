@@ -29,9 +29,8 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-0 py-0">
-      {/* Hero Section */}
+      {/* Heading Section */}
       <div className="bg-gradient-to-r from-cyan-600 to-purple-900 text-white py-9 px-4 relative">
-          {/* Back Button - Positioned to the left */}
           <div className="absolute left-4 top-4">
             <Button
               variant="ghost"
