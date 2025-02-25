@@ -1,4 +1,4 @@
-import api from "@/services/auth";
+import {api} from "./auth.service";
 
 export const createContact = async (contactData: { 
   name: string; 
@@ -6,6 +6,6 @@ export const createContact = async (contactData: {
   subject: string; 
   message: string; 
 }) => {
-  const response = await api.post("/contacts/", contactData);
+  const response = await api.post("/contact/", contactData);
   return response.data;
 };

@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { getPreviousPath } from "@/shared/prev-path-tracker";
 import { ArrowLeft } from "lucide-react";
 
-
-
 export default function CategoriesBlogPage() {
   
   const navigate = useNavigate();
@@ -19,7 +17,6 @@ export default function CategoriesBlogPage() {
     };
 
   const blogs = useLoaderData({from: "/blogs/category/$catid"});
-  console.log(blogs)
   
   if (!blogs || blogs.length === 0) {
     return (

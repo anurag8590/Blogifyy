@@ -1,15 +1,14 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
-from app.models.model import Blog, Category
+from app.models.model_blog import Blog
+from app.models.model_category import Category
 from sqlalchemy.orm import aliased
-from app.models.model import Blog
  
 class BlogDAO:
     
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
     
     async def get_all_blogs(self) -> List[Blog]:
@@ -91,11 +90,6 @@ class BlogDAO:
         ]
         
         return blogs
-
-class BlogSearchDAO:
-    
-    def __init__(self, db: AsyncSession):
-        self.db = db
 
     async def search_blogs( self, search_query: str):
      

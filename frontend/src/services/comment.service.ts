@@ -1,4 +1,4 @@
-import api from "@/services/auth";
+import {api} from "./auth.service";
 import { BlogComment } from "@/interface/Comments";
 
 export const createComment = async (commentData: { content: string; blog_id: number }) => {

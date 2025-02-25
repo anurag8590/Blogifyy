@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
-from app.models.model import Category
+from app.models.model_category import Category
 
 class CategoryDAO:
     def __init__(self, db: AsyncSession):

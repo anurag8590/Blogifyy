@@ -10,7 +10,7 @@ import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVal
 import CommentComponent from "../comment/comment";
 import { useCategories } from "@/hooks/use-category";
 import { BlogCategory } from "@/interface/Category";
-import { isAuthenticated } from "@/services/auth";
+import { isAuthenticated } from "@/services/auth.service";
 import { getPreviousPath } from "@/shared/prev-path-tracker";
 
 interface BlogFormProps {

@@ -11,7 +11,10 @@ import { BlogCategory } from "@/interface/Category";
 import { Search, PenSquare, BookOpen, Loader2 } from "lucide-react";
 
 export default function HomePage() {
-  
+  const convertHtmlToText = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const { blogs: defaultBlogs, isLoading: isBlogsLoading, isError: isBlogsError } = useBlogs();
@@ -128,7 +131,7 @@ export default function HomePage() {
                 />
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">{blog.title}</h3>
-                  <p className="text-gray-600 line-clamp-3 mb-4">{blog.content}</p>
+                  <p className="text-gray-600 line-clamp-3 mb-4">{convertHtmlToText(blog.content.slice(0,150))}</p>
                   <Link
                     to="/blogs/$blogid"
                     params={{ blogid: String(blog.blog_id) }}

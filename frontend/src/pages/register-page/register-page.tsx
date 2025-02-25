@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { register } from "@/services/auth";
+import { register } from "@/services/auth.service";
 import { Lock, User, Mail, Eye, EyeOff } from 'lucide-react';
 
 function RegisterPage() {

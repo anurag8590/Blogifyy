@@ -1,4 +1,4 @@
-import api from "@/services/auth";
+import {api} from "./auth.service";
 import { Blog } from "@/interface/Blog";
 
 export const createBlog = async (blogData: Partial<Blog>) => {

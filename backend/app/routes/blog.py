@@ -1,19 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Union
-from app.models.model import User
+from app.models.model_user import User
 from app.dao.dao_blog import BlogDAO
 from app.schemas.schema_blog import BlogResponseDTO, BlogCreateDTO, BlogUpdateDTO
-from app.dao import dao_user
-from app.database.database import get_db
+from app.dao.get_dao import get_blog_dao
+from app.dao.get_dao import get_current_user
 
 router = APIRouter(prefix="/blogs", tags=["blogs"])
 
 @router.post("/", response_model=BlogResponseDTO)
-async def create_blog(blog: BlogCreateDTO, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
+async def create_blog(blog: BlogCreateDTO, current_user: User = Depends(get_current_user), dao_blog : BlogDAO = Depends(get_blog_dao)):
 
     try:
-        dao_blog = BlogDAO(db)
         new_blog = await dao_blog.create_blog(
             title=blog.title,
             content=blog.content,
@@ -26,20 +24,18 @@ async def create_blog(blog: BlogCreateDTO, current_user: User = Depends(dao_user
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail= f"Error creating blog {e}") from e
 
 @router.get("/", response_model=List[BlogResponseDTO])
-async def get_blogs(db: AsyncSession = Depends(get_db), current_user: User = Depends(dao_user.get_current_user)):
+async def get_blogs(dao_blog : BlogDAO = Depends(get_blog_dao), current_user: User = Depends(get_current_user)):
 
     try:
-        dao_blog = BlogDAO(db)
         blogs = await dao_blog.get_all_blogs()
         return blogs
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving blogs") from e
 
 @router.put("/{blog_id}", response_model=BlogResponseDTO)
-async def update_blog(blog_id: int, blog: BlogUpdateDTO, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
+async def update_blog(blog_id: int, blog: BlogUpdateDTO, current_user: User = Depends(get_current_user), dao_blog : BlogDAO = Depends(get_blog_dao)):
 
     try:
-        dao_blog = BlogDAO(db)
         existing_blog = await dao_blog.get_blogs_by_id(blog_id)
         if existing_blog is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
@@ -58,10 +54,9 @@ async def update_blog(blog_id: int, blog: BlogUpdateDTO, current_user: User = De
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail= f"Error updating blog {e}")
 
 @router.delete("/{blog_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_blog(blog_id: int, current_user: User = Depends(dao_user.get_current_user), db: AsyncSession = Depends(get_db)):
+async def delete_blog(blog_id: int, current_user: User = Depends(get_current_user), dao_blog : BlogDAO = Depends(get_blog_dao)):
 
     try:
-        dao_blog = BlogDAO(db)
         blog = await dao_blog.get_blogs_by_id(blog_id)
         if blog is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
@@ -75,12 +70,12 @@ async def delete_blog(blog_id: int, current_user: User = Depends(dao_user.get_cu
 @router.get("/{id}/", response_model = Union[BlogResponseDTO, List[BlogResponseDTO]])
 async def get_blog(
     id: int, 
-    db: AsyncSession = Depends(get_db), get_type: str = Query(..., regex="^(USER|BLOG|CATG)$"),
-    current_user: User = Depends(dao_user.get_current_user)
+    get_type: str = Query(..., regex="^(USER|BLOG|CATG)$"),
+    current_user: User = Depends(get_current_user),
+    dao_blog : BlogDAO = Depends(get_blog_dao)
 ):
 
     try:
-        dao_blog = BlogDAO(db)
         if get_type == "USER":
             blogs = await dao_blog.get_blogs_by_user(id)
             if blogs is None:

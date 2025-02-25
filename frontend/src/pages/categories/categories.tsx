@@ -21,6 +21,7 @@ import { ArrowLeft } from "lucide-react";
 
 
 const apiKey = String(import.meta.env.VITE_SECRET_KEY);
+
 const client = createClient(apiKey);
 
 const CategoryCard = ({ category_id, name, description, imageUrl }: { category_id: number, name: string, description: string, imageUrl: string }) => (

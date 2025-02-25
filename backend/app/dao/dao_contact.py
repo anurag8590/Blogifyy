@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.model import Contact
+from app.models.model_contact import Contact
 
 class ContactDAO:
     def __init__(self, db: AsyncSession):

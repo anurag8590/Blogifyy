@@ -23,9 +23,9 @@ import axios, {
     email: string;
   }
   
-  const API_BASE_URL = "http://127.0.0.1:8000";
+  const API_BASE_URL = "http://localhost:8000";
   
-  const api = axios.create({
+  export const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ import axios, {
   const getStoredRefreshToken = () => localStorage.getItem("refresh_token");
   
   export const storeAuthData = (authResponse: AuthResponse) => {
-    console.log("Storing auth data:", authResponse);
+    console.log("Storing auth data");
     localStorage.setItem("user_id", String(authResponse.user_id));
     localStorage.setItem("token", authResponse.access_token);
     localStorage.setItem("username", authResponse.username);
@@ -138,8 +138,6 @@ import axios, {
     }
   };
   
-  export const isAuthenticated = (): boolean => {
-    return !!getStoredToken();
-  };
-  
-export default api;
+export const isAuthenticated = (): boolean => {
+  return !!getStoredToken();
+};

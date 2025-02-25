@@ -1,4 +1,4 @@
-import api from "@/services/auth";
+import {api} from "./auth.service";
 
 export const createCategory = async (categoryData: { name: string; description?: string }) => {
 const response = await api.post("/categories", categoryData);

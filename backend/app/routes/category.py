@@ -1,17 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from app.dao.dao_category import CategoryDAO
 from app.schemas.schema_category import CategoryResponseDTO, CategoryCreateDTO, CategoryUpdateDTO
-from app.database.database import get_db
+from app.dao.get_dao import get_category_dao
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
 @router.post("/", response_model=CategoryResponseDTO)
-async def create_category(category: CategoryCreateDTO, db: AsyncSession = Depends(get_db)):
+async def create_category(category: CategoryCreateDTO, dao_category : CategoryDAO = Depends(get_category_dao)):
 
     try:
-        dao_category = CategoryDAO(db)
         new_category = await dao_category.create_category(
             name=category.name,
             description=category.description
@@ -21,20 +19,18 @@ async def create_category(category: CategoryCreateDTO, db: AsyncSession = Depend
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail= f"Error creating category{e}") from e
 
 @router.get("/", response_model=List[CategoryResponseDTO])
-async def get_categories(db: AsyncSession = Depends(get_db)):
+async def get_categories(dao_category : CategoryDAO = Depends(get_category_dao)):
 
     try:
-        dao_category = CategoryDAO(db)
         categories = await dao_category.get_all_categories()
         return categories
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving categories") from e
 
 @router.get("/{category_id}", response_model=CategoryResponseDTO)
-async def get_category_by_id(category_id: int, db: AsyncSession = Depends(get_db)):
+async def get_category_by_id(category_id: int, dao_category : CategoryDAO = Depends(get_category_dao)):
 
     try:
-        dao_category = CategoryDAO(db)
         category = await dao_category.get_category_by_id(category_id)
         if category is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
@@ -43,10 +39,9 @@ async def get_category_by_id(category_id: int, db: AsyncSession = Depends(get_db
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving category") from e
 
 @router.put("/{category_id}", response_model=CategoryResponseDTO)
-async def update_category(category_id: int, category: CategoryUpdateDTO, db: AsyncSession = Depends(get_db)):
+async def update_category(category_id: int, category: CategoryUpdateDTO, dao_category : CategoryDAO = Depends(get_category_dao)):
 
     try:
-        dao_category = CategoryDAO(db)
         existing_category = await dao_category.get_category_by_id(category_id)
         if existing_category is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")

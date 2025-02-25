@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { getBlogById } from '@/api/blog';
+import { getBlogById } from '@/services/blog.service';
 import BlogEditPage from '@/pages/blog-page/blog-edit-page';
-import { isAuthenticated } from '@/services/auth';
+import { isAuthenticated } from '@/services/auth.service';
 
 export const Route = createFileRoute('/myblogs/$blogid')({
   beforeLoad: () => {

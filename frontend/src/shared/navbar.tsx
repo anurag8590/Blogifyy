@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from "@tanstack/react-router";
-import { clearAuthData } from "@/services/auth";
+import { clearAuthData } from '@/services/auth.service';
 import { Menu, X, BookOpen} from 'lucide-react';
 
 const Navbar = () => {

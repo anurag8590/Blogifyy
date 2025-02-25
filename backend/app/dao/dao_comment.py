@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException
 from typing import Optional
-from app.models.model import Comment
+from app.models.model_comment import Comment
 
 class CommentDAO:
     def __init__(self, db: AsyncSession):

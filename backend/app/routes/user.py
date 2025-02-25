@@ -1,18 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.database.database import get_db
 from app.dao.dao_user import UserDAO
 from app.schemas.schema_user import UserCreateDTO, RefreshTokenDTO
+from app.dao.get_dao import get_user_dao
 import jwt
 
 router = APIRouter(tags=["auth"])
 
 @router.post("/register/")
-async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_db)):
+async def create_user(user_data: UserCreateDTO, dao_user : UserDAO = Depends(get_user_dao)):
 
     try:
-        dao_user = UserDAO(db)
         created_user = await dao_user.create_user(user_data.username, user_data.password,user_data.email)
 
         if created_user is None:
@@ -32,11 +30,9 @@ async def create_user(user_data: UserCreateDTO, db: AsyncSession = Depends(get_d
         ) from e
 
 @router.post("/token/")
-async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+async def token(user: OAuth2PasswordRequestForm = Depends(), dao_user : UserDAO = Depends(get_user_dao)):
 
     try:
-        dao_user = UserDAO(db)
-
         user_retrieved = await dao_user.authenticate_user(user.username, user.password)
 
         if user_retrieved is None:
@@ -59,9 +55,7 @@ async def token(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {str(e)}") from e
 
 @router.post("/refresh/")
-async def refresh_token(refresh_data: RefreshTokenDTO, db: AsyncSession = Depends(get_db)):
-    
-    dao_user = UserDAO(db)
+async def refresh_token(refresh_data: RefreshTokenDTO, dao_user : UserDAO = Depends(get_user_dao)):
 
     try:
         payload = dao_user.verify_refresh_token(refresh_data.refresh_token)

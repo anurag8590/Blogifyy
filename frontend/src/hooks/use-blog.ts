@@ -7,10 +7,10 @@ import {
   getBlogsByUserId, 
   getBlogsByCategoryId, 
   searchBlogs}
-  from "@/api/blog";
+  from "@/services/blog.service";
 
 import { Blog } from "@/interface/Blog";
-import { isAuthenticated } from "@/services/auth";
+import { isAuthenticated } from "@/services/auth.service";
 
 export const useBlogs = () => {
   const queryClient = useQueryClient();
