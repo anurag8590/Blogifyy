@@ -2,7 +2,7 @@ import { useCategories } from "@/hooks/use-category";
 import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { BlogCategory } from "@/interface/Category";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { getPreviousPath } from "@/shared/prev-path-tracker";
+import { ArrowLeft } from "lucide-react";
 
 
 const apiKey = String(import.meta.env.VITE_SECRET_KEY);
@@ -58,6 +60,7 @@ const CategoriesPage = () => {
   const [categoriesWithImages, setCategoriesWithImages] = useState<CategoryWithImage[]>([]);
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleCreateCategory = () => {
     createMutation.mutate(newCategory, {
@@ -128,6 +131,13 @@ const CategoriesPage = () => {
     );
   }
 
+  const handleGoBack = () => {
+      const previousPath = getPreviousPath();
+      if (previousPath) {
+        navigate({to : previousPath});
+      }
+    };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-0 py-0">
@@ -139,6 +149,13 @@ const CategoriesPage = () => {
             <p className="text-lg text-white max-w-2xl mx-auto leading-relaxed pt-3">
               Discover content across different topics and genres. Each category offers unique perspectives and engaging discussions.
             </p>
+          <Button
+                onClick={handleGoBack}
+                className="text-white hover:text-purple-950 hover:bg-white rounded-full mt-4 drop-shadow-2xl"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                <span>Back</span>
+          </Button>
           <div className="flex px-6">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -189,6 +206,7 @@ const CategoriesPage = () => {
             </Dialog>
           </div>
           </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 pb-8">
             {categoriesWithImages.map((category) => (
