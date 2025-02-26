@@ -34,7 +34,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     
-    db_user =await  user_dao.get_user_by_username(payload.get("sub"))
+    db_user = await  user_dao.get_user_by_username(payload.get("sub"))
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     

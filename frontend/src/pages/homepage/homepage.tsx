@@ -11,10 +11,7 @@ import { BlogCategory } from "@/interface/Category";
 import { Search, PenSquare, BookOpen, Loader2 } from "lucide-react";
 
 export default function HomePage() {
-  const convertHtmlToText = (html: string) => {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    return doc.body.textContent || "";
-  };
+
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const { blogs: defaultBlogs, isLoading: isBlogsLoading, isError: isBlogsError } = useBlogs();
@@ -22,7 +19,12 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const { data: categoryBlogs, isLoading: isCategoryBlogsLoading } = useCategoryBlogs(activeCategoryId!);
-
+  
+  const convertHtmlToText = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+  
   const filteredBlogs = useMemo(() => {
     const blogsToFilter = activeCategoryId ? categoryBlogs : defaultBlogs;
     if (!blogsToFilter) return [];

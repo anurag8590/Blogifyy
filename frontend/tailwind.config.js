@@ -7,7 +7,7 @@ module.exports = {
   theme: {
   	extend: {
 		fontFamily: {
-			customFont: ['Super Dream', "Monospace"]
+			customFont: ['SuperDream', "Monospace"]
 		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -29,7 +29,7 @@ function LoginPage() {
       });
 
       toast.success("Login successful!", {
-        autoClose: 2000,
+        autoClose: 1500,
         position: "bottom-right",
         transition: Flip,
       });
