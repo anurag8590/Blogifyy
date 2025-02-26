@@ -7,7 +7,7 @@ import RichTextEditor from "@/components/editor/editor";
 import { Save, Edit, ArrowLeft, Trash, BookOpen, Eye, EyeOff } from "lucide-react";
 import { useBlogs } from "@/hooks/use-blog";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import CommentComponent from "../comment/comment";
+import CommentComponent from "../../components/comment";
 import { useCategories } from "@/hooks/use-category";
 import { BlogCategory } from "@/interface/Category";
 import { isAuthenticated } from "@/services/auth.service";
