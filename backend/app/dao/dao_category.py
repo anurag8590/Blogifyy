@@ -8,10 +8,10 @@ class CategoryDAO:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def create_category(self, name: str, description: Optional[str] = None) -> Category:
+    async def create_category(self, name: str, user_id : int, description: Optional[str] = None) -> Category:
 
         try:
-            new_category = Category(name=name, description=description)
+            new_category = Category(name=name, description=description, user_id = user_id)
             self.db.add(new_category)
             await self.db.commit()
             await self.db.refresh(new_category)
@@ -24,6 +24,16 @@ class CategoryDAO:
 
         try:
             query = select(Category)
+            result = await self.db.execute(query)
+            categories = result.scalars().all()
+            return categories
+        except SQLAlchemyError as e:
+            raise e
+        
+    async def get_categories_by_user(self, user_id : int) -> List[Category]:
+
+        try:
+            query = select(Category).filter(Category.user_id == user_id)
             result = await self.db.execute(query)
             categories = result.scalars().all()
             return categories

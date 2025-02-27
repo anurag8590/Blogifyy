@@ -13,6 +13,7 @@ class CategoryResponseDTO(BaseModel):
     category_id: int
     name: str
     description: Optional[str] = None
+    user_id : int
 
     model_config = ConfigDict(
         from_attributes=True,

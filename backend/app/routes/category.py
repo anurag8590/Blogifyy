@@ -1,17 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Path
 from typing import List
 from app.dao.dao_category import CategoryDAO
 from app.schemas.schema_category import CategoryResponseDTO, CategoryCreateDTO, CategoryUpdateDTO
 from app.dao.get_dao import get_category_dao
+from app.models.model_user import User
+from app.dao.get_dao import get_current_user
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
 @router.post("/", response_model=CategoryResponseDTO)
-async def create_category(category: CategoryCreateDTO, dao_category : CategoryDAO = Depends(get_category_dao)):
+async def create_category(category: CategoryCreateDTO, dao_category : CategoryDAO = Depends(get_category_dao), current_user: User = Depends(get_current_user)):
 
     try:
         new_category = await dao_category.create_category(
             name=category.name,
+            user_id = current_user.id,
             description=category.description
         )
         return new_category
@@ -23,6 +26,14 @@ async def get_categories(dao_category : CategoryDAO = Depends(get_category_dao))
 
     try:
         categories = await dao_category.get_all_categories()
+        return categories
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving categories") from e
+    
+@router.get("/{user_id}", response_model = List[CategoryResponseDTO])
+async def get_categories_by_user_id(user_id: int = Path(..., title="User ID"), dao_category : CategoryDAO = Depends(get_category_dao)):
+    try:
+        categories = await dao_category.get_categories_by_user(user_id)
         return categories
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving categories") from e

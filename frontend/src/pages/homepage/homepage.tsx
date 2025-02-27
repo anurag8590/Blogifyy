@@ -79,6 +79,14 @@ export default function HomePage() {
               <BookOpen size={20} />
               My Stories
             </Button>
+            <Button
+              onClick={() => navigate({ to: "/my-categories" })}
+              variant="ghost"
+              className="text-white hover:text-purple-950 hover:bg-white shadow-lg rounded-full px-6 py-2 flex items-center gap-2"
+            >
+              <BookOpen size={20} />
+              My Categories
+            </Button>
           </div>
         </div>
       </div>
