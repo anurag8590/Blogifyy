@@ -16,8 +16,8 @@ class Blog(Base):
     blog_id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     content: Mapped[Optional[str]] = mapped_column(Text, nullable=False)
-    modified_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('now()'), onupdate=text('now()'), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('now()'), nullable=False)
+    modified_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'), onupdate=text('CURRENT_TIMESTAMP'), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'), nullable=False)
     is_published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), index=True)

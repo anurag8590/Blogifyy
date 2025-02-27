@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 SQLALCHMEY_DATABASE_URL = os.getenv("SQLALCHMEY_DATABASE_URL")
-engine = create_async_engine(SQLALCHMEY_DATABASE_URL)
+engine = create_async_engine(SQLALCHMEY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

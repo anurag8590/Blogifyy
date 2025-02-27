@@ -14,8 +14,8 @@ class Comment(Base):
 
     comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('now()'), nullable=False)
-    modified_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('now()'), onupdate=text('now()'), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'), nullable=False)
+    modified_at: Mapped[datetime] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'), onupdate=text('CURRENT_TIMESTAMP'), nullable=False)
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), index=True)
     blog_id: Mapped[int] = mapped_column(Integer, ForeignKey("blogs.blog_id"), index=True)
