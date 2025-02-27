@@ -12,6 +12,6 @@ class Category(Base):
 
     category_id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
-    description: Mapped[Optional[str]] = mapped_column(Text)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     blogs: Mapped[List["Blog"]] = relationship("Blog", back_populates="category", cascade="all, delete-orphan")
