@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/use-category";
@@ -9,6 +9,7 @@ import { Flip, toast } from "react-toastify";
 import { Blog } from "@/interface/Blog";
 import { BlogCategory } from "@/interface/Category";
 import { Search, PenSquare, BookOpen, Loader2 } from "lucide-react";
+import BlogCard from '@/components/blog-card';
 
 export default function HomePage() {
 
@@ -79,14 +80,6 @@ export default function HomePage() {
               <BookOpen size={20} />
               My Stories
             </Button>
-            <Button
-              onClick={() => navigate({ to: "/my-categories" })}
-              variant="ghost"
-              className="text-white hover:text-purple-950 hover:bg-white shadow-lg rounded-full px-6 py-2 flex items-center gap-2"
-            >
-              <BookOpen size={20} />
-              My Categories
-            </Button>
           </div>
         </div>
       </div>
@@ -131,27 +124,11 @@ export default function HomePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredBlogs.map((blog: Blog) => (
-              <div
-                key={blog.blog_id}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
-              >
-                <div
-                  className="h-48 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${blog.thumbnail || '/florian-klauer-mk7D-4UCfmg-unsplash.jpg'})` }}
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">{blog.title}</h3>
-                  <p className="text-gray-600 line-clamp-3 mb-4">{convertHtmlToText(blog.content.slice(0,150))}</p>
-                  <Link
-                    to="/blogs/$blogid"
-                    params={{ blogid: String(blog.blog_id) }}
-                    state={{ author: String(blog.user_id) } as any}
-                    className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium gap-2 transition-colors"
-                  >
-                    Read More →
-                  </Link>
-                </div>
-              </div>
+              <BlogCard 
+                key={blog.blog_id} 
+                blog={blog}
+                convertHtmlToText={convertHtmlToText} 
+              />
             ))}
             {filteredBlogs.length === 0 && (
               <div className="col-span-full text-center py-12">

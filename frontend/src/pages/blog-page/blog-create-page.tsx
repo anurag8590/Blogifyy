@@ -11,7 +11,6 @@ import CommentComponent from "../../components/comment";
 import { useCategories } from "@/hooks/use-category";
 import { BlogCategory } from "@/interface/Category";
 import { isAuthenticated } from "@/services/auth.service";
-import { getPreviousPath } from "@/shared/prev-path-tracker";
 
 interface BlogFormProps {
   view: boolean;
@@ -93,7 +92,7 @@ export default function BlogCreatePage({
               transition: Flip,
             });
             setEditingMode(false);
-            navigate({ to: `/homepage` });
+            navigate({ to: `/my-blog` });
           },
         }
       );
@@ -105,7 +104,7 @@ export default function BlogCreatePage({
             position: "bottom-right",
             transition: Flip,
           });
-          navigate({ to: "/homepage" });
+          navigate({ to: "/my-blog" });
         },
       });
     }
@@ -127,10 +126,7 @@ export default function BlogCreatePage({
   };
 
   const handleGoBack = () => {
-    const previousPath = getPreviousPath();
-    if (previousPath) {
-      navigate({to : previousPath});
-    }
+    window.history.back();
   };
 
   return (

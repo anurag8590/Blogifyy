@@ -49,19 +49,19 @@ async def get_category_by_id(category_id: int, dao_category : CategoryDAO = Depe
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error retrieving category") from e
 
-@router.put("/{category_id}", response_model=CategoryResponseDTO)
-async def update_category(category_id: int, category: CategoryUpdateDTO, dao_category : CategoryDAO = Depends(get_category_dao)):
+# @router.put("/{category_id}", response_model=CategoryResponseDTO)
+# async def update_category(category_id: int, category: CategoryUpdateDTO, dao_category : CategoryDAO = Depends(get_category_dao)):
 
-    try:
-        existing_category = await dao_category.get_category_by_id(category_id)
-        if existing_category is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
+#     try:
+#         existing_category = await dao_category.get_category_by_id(category_id)
+#         if existing_category is None:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
 
-        updated_category = await dao_category.update_category(
-            category_id=category_id,
-            name=category.name,
-            description=category.description
-        )
-        return updated_category
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating category") from e
+#         updated_category = await dao_category.update_category(
+#             category_id=category_id,
+#             name=category.name,
+#             description=category.description
+#         )
+#         return updated_category
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error updating category") from e

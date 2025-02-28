@@ -50,40 +50,40 @@ class CategoryDAO:
         except SQLAlchemyError as e:
             raise e
 
-    async def update_category(
-        self, 
-        category_id: int, 
-        name: Optional[str] = None, 
-        description: Optional[str] = None
-    ) -> Optional[Category]:
+    # async def update_category(
+    #     self, 
+    #     category_id: int, 
+    #     name: Optional[str] = None, 
+    #     description: Optional[str] = None
+    # ) -> Optional[Category]:
 
-        try:
-            category = await self.get_category_by_id(category_id)
-            if category is None:
-                return None
+    #     try:
+    #         category = await self.get_category_by_id(category_id)
+    #         if category is None:
+    #             return None
 
-            if name is not None:
-                category.name = name
-            if description is not None:
-                category.description = description
+    #         if name is not None:
+    #             category.name = name
+    #         if description is not None:
+    #             category.description = description
 
-            await self.db.commit()
-            await self.db.refresh(category)
-            return category
-        except SQLAlchemyError as e:
-            await self.db.rollback()
-            raise e
+    #         await self.db.commit()
+    #         await self.db.refresh(category)
+    #         return category
+    #     except SQLAlchemyError as e:
+    #         await self.db.rollback()
+    #         raise e
 
-    async def delete_category(self, category_id: int) -> bool:
+    # async def delete_category(self, category_id: int) -> bool:
 
-        try:
-            category = await self.get_category_by_id(category_id)
-            if category is None:
-                return False
+    #     try:
+    #         category = await self.get_category_by_id(category_id)
+    #         if category is None:
+    #             return False
 
-            await self.db.delete(category)
-            await self.db.commit()
-            return True
-        except SQLAlchemyError as e:
-            await self.db.rollback()
-            raise e
+    #         await self.db.delete(category)
+    #         await self.db.commit()
+    #         return True
+    #     except SQLAlchemyError as e:
+    #         await self.db.rollback()
+    #         raise e
