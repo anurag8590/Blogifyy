@@ -8,10 +8,10 @@ class CategoryDAO:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def create_category(self, name: str, description: Optional[str] = None) -> Category:
+    async def create_category(self, name: str, user_id : int, description: Optional[str] = None) -> Category:
 
         try:
-            new_category = Category(name=name, description=description)
+            new_category = Category(name=name, description=description, user_id = user_id)
             self.db.add(new_category)
             await self.db.commit()
             await self.db.refresh(new_category)
@@ -29,6 +29,16 @@ class CategoryDAO:
             return categories
         except SQLAlchemyError as e:
             raise e
+        
+    async def get_categories_by_user(self, user_id : int) -> List[Category]:
+
+        try:
+            query = select(Category).filter(Category.user_id == user_id)
+            result = await self.db.execute(query)
+            categories = result.scalars().all()
+            return categories
+        except SQLAlchemyError as e:
+            raise e
 
     async def get_category_by_id(self, category_id: int) -> Optional[Category]:
 
@@ -40,40 +50,40 @@ class CategoryDAO:
         except SQLAlchemyError as e:
             raise e
 
-    async def update_category(
-        self, 
-        category_id: int, 
-        name: Optional[str] = None, 
-        description: Optional[str] = None
-    ) -> Optional[Category]:
+    # async def update_category(
+    #     self, 
+    #     category_id: int, 
+    #     name: Optional[str] = None, 
+    #     description: Optional[str] = None
+    # ) -> Optional[Category]:
 
-        try:
-            category = await self.get_category_by_id(category_id)
-            if category is None:
-                return None
+    #     try:
+    #         category = await self.get_category_by_id(category_id)
+    #         if category is None:
+    #             return None
 
-            if name is not None:
-                category.name = name
-            if description is not None:
-                category.description = description
+    #         if name is not None:
+    #             category.name = name
+    #         if description is not None:
+    #             category.description = description
 
-            await self.db.commit()
-            await self.db.refresh(category)
-            return category
-        except SQLAlchemyError as e:
-            await self.db.rollback()
-            raise e
+    #         await self.db.commit()
+    #         await self.db.refresh(category)
+    #         return category
+    #     except SQLAlchemyError as e:
+    #         await self.db.rollback()
+    #         raise e
 
-    async def delete_category(self, category_id: int) -> bool:
+    # async def delete_category(self, category_id: int) -> bool:
 
-        try:
-            category = await self.get_category_by_id(category_id)
-            if category is None:
-                return False
+    #     try:
+    #         category = await self.get_category_by_id(category_id)
+    #         if category is None:
+    #             return False
 
-            await self.db.delete(category)
-            await self.db.commit()
-            return True
-        except SQLAlchemyError as e:
-            await self.db.rollback()
-            raise e
+    #         await self.db.delete(category)
+    #         await self.db.commit()
+    #         return True
+    #     except SQLAlchemyError as e:
+    #         await self.db.rollback()
+    #         raise e

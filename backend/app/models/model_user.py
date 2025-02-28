@@ -6,6 +6,7 @@ from app.database.database import Base
 if TYPE_CHECKING:
     from app.models.model_blog import Blog
     from app.models.model_comment import Comment
+    from app.models.model_category import Category
 
 class User(Base):
     __tablename__ = "users"
@@ -17,3 +18,4 @@ class User(Base):
 
     blogs: Mapped[List["Blog"]] = relationship("Blog", back_populates="user", cascade="all, delete-orphan")
     comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
+    categories: Mapped[List["Category"]] = relationship("Category", back_populates="user", cascade="all, delete-orphan")

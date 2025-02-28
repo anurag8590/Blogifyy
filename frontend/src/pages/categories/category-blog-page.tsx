@@ -1,20 +1,14 @@
-import { useLoaderData, useNavigate } from "@tanstack/react-router";
+import { useLoaderData } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Blog } from "@/interface/Blog";
 import { Button } from "@/components/ui/button";
-import { getPreviousPath } from "@/shared/prev-path-tracker";
 import { ArrowLeft } from "lucide-react";
 
 export default function CategoriesBlogPage() {
   
-  const navigate = useNavigate();
-  
   const handleGoBack = () => {
-      const previousPath = getPreviousPath();
-      if (previousPath) {
-        navigate({to : previousPath});
-      }
-    };
+    window.history.back();
+  };
 
   const blogs = useLoaderData({from: "/blogs/category/$catid"});
   
