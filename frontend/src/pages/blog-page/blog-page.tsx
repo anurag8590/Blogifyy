@@ -1,30 +1,21 @@
 import { useBlogs } from "@/hooks/use-blog";
-import { Link } from "@tanstack/react-router";
 import { Loader2, PenSquare, Plus, AlertCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
-import { getPreviousPath } from "@/shared/prev-path-tracker";
+import MyBlogCard from "@/components/my-blog-card";
 
 export default function BlogPage() {
   const { userBlogs, isLoading, isError } = useBlogs();
   const navigate = useNavigate();
 
-  const getStatusColor = (isPublished: boolean) => {
-    return isPublished 
-      ? "bg-green-100 text-green-700" 
-      : "bg-yellow-100 text-yellow-700";
-  };
-
-  const getStatusText = (isPublished: boolean) => {
-    return isPublished ? "Published" : "Draft";
-  };
-
   const handleGoBack = () => {
-      const previousPath = getPreviousPath();
-      if (previousPath) {
-        navigate({to : previousPath});
-      }
-    };
+    window.history.back();
+  };
+
+  const convertHtmlToText = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
@@ -82,50 +73,11 @@ export default function BlogPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {userBlogs?.map((blog: any) => (
-              <div
-                key={blog.blog_id}
-                className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300"
-              >
-
-                <div
-                  className="h-48 bg-cover bg-center bg-purple-100"
-                  style={{ 
-                    backgroundImage: blog.thumbnail 
-                      ? `url(${blog.thumbnail})` 
-                      : `url(/florian-klauer-mk7D-4UCfmg-unsplash.jpg)` 
-                  }}
-                />
-                
-                <div className="p-6">
-
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${getStatusColor(blog.is_published)}`}>
-                    {getStatusText(blog.is_published)}
-                  </span>
-                  
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">
-                    {blog.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 mb-6 line-clamp-3">
-                    {blog.content}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <Link
-                      to="/myblogs/$blogid"
-                      params={{ blogid: String(blog.blog_id) }}
-                      className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium gap-2 transition-colors"
-                    >
-                      <PenSquare size={16} />
-                      Edit Story
-                    </Link>
-                    
-                    <span className="text-sm text-gray-500">
-                      {new Date(blog.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <MyBlogCard 
+                key={blog.blog_id} 
+                blog={blog}
+                convertHtmlToText={convertHtmlToText} // Make sure you have this function available
+              />
             ))}
           </div>
         )}

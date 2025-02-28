@@ -2,12 +2,10 @@ import {Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTr
 import { useCategories } from "@/hooks/use-category";
 import { useEffect, useState } from "react";
 import { BlogCategory, CategoryWithImage } from "@/interface/Category";
-import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { getPreviousPath } from "@/shared/prev-path-tracker";
 import { ArrowLeft } from "lucide-react";
 import { CategoryCard } from "@/components/category-card";
 import { fetchPexelImage } from "@/components/get-pexel-image";
@@ -18,7 +16,6 @@ const CategoriesPage = () => {
   const [categoriesWithImages, setCategoriesWithImages] = useState<CategoryWithImage[]>([]);
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const navigate = useNavigate();
 
   const handleCreateCategory = () => {
     createMutation.mutate(newCategory, {
@@ -72,10 +69,7 @@ const CategoriesPage = () => {
   }
 
   const handleGoBack = () => {
-      const previousPath = getPreviousPath();
-      if (previousPath) {
-        navigate({to : previousPath});
-      }
+      window.history.back();
     };
 
   return (

@@ -21,7 +21,6 @@ import { Route as BlogsCategoryCatidImport } from './routes/blogs/category/$cati
 
 const RegisterLazyImport = createFileRoute('/register')()
 const NewblogLazyImport = createFileRoute('/newblog')()
-const MyCategoriesLazyImport = createFileRoute('/my-categories')()
 const MyBlogLazyImport = createFileRoute('/my-blog')()
 const LoginLazyImport = createFileRoute('/login')()
 const HomepageLazyImport = createFileRoute('/homepage')()
@@ -43,12 +42,6 @@ const NewblogLazyRoute = NewblogLazyImport.update({
   path: '/newblog',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/newblog.lazy').then((d) => d.Route))
-
-const MyCategoriesLazyRoute = MyCategoriesLazyImport.update({
-  id: '/my-categories',
-  path: '/my-categories',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/my-categories.lazy').then((d) => d.Route))
 
 const MyBlogLazyRoute = MyBlogLazyImport.update({
   id: '/my-blog',
@@ -163,13 +156,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyBlogLazyImport
       parentRoute: typeof rootRoute
     }
-    '/my-categories': {
-      id: '/my-categories'
-      path: '/my-categories'
-      fullPath: '/my-categories'
-      preLoaderRoute: typeof MyCategoriesLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/newblog': {
       id: '/newblog'
       path: '/newblog'
@@ -218,7 +204,6 @@ export interface FileRoutesByFullPath {
   '/homepage': typeof HomepageLazyRoute
   '/login': typeof LoginLazyRoute
   '/my-blog': typeof MyBlogLazyRoute
-  '/my-categories': typeof MyCategoriesLazyRoute
   '/newblog': typeof NewblogLazyRoute
   '/register': typeof RegisterLazyRoute
   '/blogs/$blogid': typeof BlogsBlogidRoute
@@ -234,7 +219,6 @@ export interface FileRoutesByTo {
   '/homepage': typeof HomepageLazyRoute
   '/login': typeof LoginLazyRoute
   '/my-blog': typeof MyBlogLazyRoute
-  '/my-categories': typeof MyCategoriesLazyRoute
   '/newblog': typeof NewblogLazyRoute
   '/register': typeof RegisterLazyRoute
   '/blogs/$blogid': typeof BlogsBlogidRoute
@@ -251,7 +235,6 @@ export interface FileRoutesById {
   '/homepage': typeof HomepageLazyRoute
   '/login': typeof LoginLazyRoute
   '/my-blog': typeof MyBlogLazyRoute
-  '/my-categories': typeof MyCategoriesLazyRoute
   '/newblog': typeof NewblogLazyRoute
   '/register': typeof RegisterLazyRoute
   '/blogs/$blogid': typeof BlogsBlogidRoute
@@ -269,7 +252,6 @@ export interface FileRouteTypes {
     | '/homepage'
     | '/login'
     | '/my-blog'
-    | '/my-categories'
     | '/newblog'
     | '/register'
     | '/blogs/$blogid'
@@ -284,7 +266,6 @@ export interface FileRouteTypes {
     | '/homepage'
     | '/login'
     | '/my-blog'
-    | '/my-categories'
     | '/newblog'
     | '/register'
     | '/blogs/$blogid'
@@ -299,7 +280,6 @@ export interface FileRouteTypes {
     | '/homepage'
     | '/login'
     | '/my-blog'
-    | '/my-categories'
     | '/newblog'
     | '/register'
     | '/blogs/$blogid'
@@ -316,7 +296,6 @@ export interface RootRouteChildren {
   HomepageLazyRoute: typeof HomepageLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   MyBlogLazyRoute: typeof MyBlogLazyRoute
-  MyCategoriesLazyRoute: typeof MyCategoriesLazyRoute
   NewblogLazyRoute: typeof NewblogLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
   BlogsBlogidRoute: typeof BlogsBlogidRoute
@@ -332,7 +311,6 @@ const rootRouteChildren: RootRouteChildren = {
   HomepageLazyRoute: HomepageLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   MyBlogLazyRoute: MyBlogLazyRoute,
-  MyCategoriesLazyRoute: MyCategoriesLazyRoute,
   NewblogLazyRoute: NewblogLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
   BlogsBlogidRoute: BlogsBlogidRoute,
@@ -357,7 +335,6 @@ export const routeTree = rootRoute
         "/homepage",
         "/login",
         "/my-blog",
-        "/my-categories",
         "/newblog",
         "/register",
         "/blogs/$blogid",
@@ -385,9 +362,6 @@ export const routeTree = rootRoute
     },
     "/my-blog": {
       "filePath": "my-blog.lazy.tsx"
-    },
-    "/my-categories": {
-      "filePath": "my-categories.lazy.tsx"
     },
     "/newblog": {
       "filePath": "newblog.lazy.tsx"
